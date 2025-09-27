@@ -1,0 +1,49 @@
+# Configs sensibles
+appsettings.json
+appsettings.*.json
+**/appsettings.json
+**/appsettings.*.json
+
+
+# Ignorar configuraciones sensibles
+appsettings.json
+appsettings.Development.json
+
+# Archivos de configuración del usuario de VS
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Carpeta de Visual Studio
+.vs/
+
+# Directorios de compilación
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Archivos de paquetes NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Archivos de configuración de Rider/Resharper
+.idea/
+*.DotSettings.user
+
+# Cache
+*.vsidx
+*.dbmdl
+*.jfm
+
+# Archivos de migraciones de EF (se versionan SOLO las clases, no la DB local)
+*.mdf
+*.ldf
+
+# Config locales 
+appsettings.Development.json
