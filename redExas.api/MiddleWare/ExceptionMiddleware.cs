@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
+using Domain.Exceptions;
 
 namespace Api.Middlewares
 {
@@ -38,6 +39,9 @@ namespace Api.Middlewares
                 ValidationException => StatusCodes.Status400BadRequest,
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                 InvalidCredentialException => StatusCodes.Status401Unauthorized,
+                EmailAlreadyExistsException => StatusCodes.Status409Conflict,
+                ArgumentOutOfRangeException => StatusCodes.Status400BadRequest,
+                FormatException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 

@@ -15,6 +15,7 @@ namespace Application.MappingProfiles
         public EmprendimientoProfile()
         {
             CreateMap<CreateEmprendimientoDTO, Emprendimiento>();
+            CreateMap<Emprendimiento, EmprendimientoDTO>();
         }
     }
 }

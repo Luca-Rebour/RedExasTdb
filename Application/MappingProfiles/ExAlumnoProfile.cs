@@ -14,6 +14,7 @@ namespace Application.MappingProfiles
         public ExAlumnoProfile()
         {
             CreateMap<CreateExAlumnoDTO, ExAlumno>();
-        }
+            CreateMap<ExAlumno, ExAlumnoDTO>();
+        }   
     }
 }

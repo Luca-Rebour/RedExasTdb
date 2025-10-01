@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace Infrastructure.Repositories
             await _context.Emprendimientos.AddAsync(emprendimiento);
             await _context.SaveChangesAsync();
             return emprendimiento;
+        }
+
+        public async Task<List<Emprendimiento>> GetAllEmprendimientoAsync()
+        {
+            return await _context.Emprendimientos.Include(e => e.ExAlumno).ToListAsync();
         }
     }
 }

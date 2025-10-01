@@ -10,5 +10,6 @@ namespace Application.Interfaces.Repositories
     public interface IEmprendimientoRepository
     {
         Task<Emprendimiento> CreateEmprendimientoAsync(Emprendimiento emprendimiento);
+        Task<List<Emprendimiento>> GetAllEmprendimientoAsync();
     }
 }

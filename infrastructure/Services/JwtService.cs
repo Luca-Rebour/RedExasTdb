@@ -16,7 +16,7 @@ namespace Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(Guid userId, string email)
+        public string GenerateToken(Guid userId, string email, string userRole)
         {
             var secretKey = _configuration["JwtSettings:Secret"];
             var issuer = _configuration["JwtSettings:Issuer"];
@@ -31,7 +31,8 @@ namespace Infrastructure.Services
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, userRole),
             };
 
             var token = new JwtSecurityToken(

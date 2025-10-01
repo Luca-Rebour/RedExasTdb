@@ -29,9 +29,11 @@ namespace Application.UseCases.Emprendimientos
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<Emprendimiento> ExecuteAsync(CreateEmprendimientoDTO emprendimientoDTO)
+        public async Task<Emprendimiento> ExecuteAsync(CreateEmprendimientoDTO emprendimientoDTO, Guid userId)
         {
+            emprendimientoDTO.validate();
             Emprendimiento emprendimiento = _mapper.Map<Emprendimiento>(emprendimientoDTO);
+            emprendimiento.setExAlumnoId(userId);
             await _emprendimientoRepository.CreateEmprendimientoAsync(emprendimiento);
             return emprendimiento;
         }

@@ -13,6 +13,12 @@ using Application.UseCases.ExAlumnos;
 using Application.Interfaces.UseCases.Emprendimientos;
 using Application.UseCases.Emprendimientos;
 using Microsoft.OpenApi.Models;
+using Application.Interfaces.UseCases.Auth;
+using Application.UseCases.Usuarios;
+using Api.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace redExas.api
 {
@@ -59,6 +65,32 @@ namespace redExas.api
 
 
             // Add services to the container.
+            builder.Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var jwt = builder.Configuration.GetSection("JwtSettings");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwt["Issuer"],
+                    ValidAudience = jwt["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwt["Secret"]!)
+                    ),
+                    // Si usás claim "role" plano:
+                    RoleClaimType = "role" // o ClaimTypes.Role si agregaste ese
+                };
+            });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -106,7 +138,14 @@ namespace redExas.api
 
             // Inyeccion de dependencias UseCases de Emprendimiento
             builder.Services.AddScoped<ICreateEmprendimiento, CreateEmprendimiento>();
+            builder.Services.AddScoped<IGetAllEmprendimientos, GetAllEmprendimientos>();
 
+            // Inyeccion de dependencias UseCases de Usuario
+            builder.Services.AddScoped<ISignIn, SignIn>();
+
+
+            // Inyeccion de dependencias UseCases de Servicios
+            builder.Services.AddScoped<IJwtService, JwtService>();
 
             var app = builder.Build();
 
@@ -123,6 +162,8 @@ namespace redExas.api
 
 
             app.MapControllers();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.Run();
         }

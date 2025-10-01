@@ -21,5 +21,10 @@ namespace Infrastructure.Repositories
         {
             return await _context.Usuarios.AnyAsync(u => u.Email == email);
         }
+
+        public async Task<Usuario> GetUserByEmail(string email)
+        {
+            return await _context.Usuarios.FirstAsync(u => u.Email == email);
+        }
     }
 }
