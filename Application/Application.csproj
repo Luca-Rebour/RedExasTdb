@@ -15,4 +15,8 @@
     <ProjectReference Include="..\domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Administrador\" />
+  </ItemGroup>
+
 </Project>

@@ -30,12 +30,11 @@ namespace Application.UseCases.ExAlumnos
 
         public async Task<ExAlumno> ExecuteAsync(CreateExAlumnoDTO exAlumnoDTO)
         {
-            exAlumnoDTO.Validate();
-            bool existeEmail = await _usuarioRepository.ExisteEmailAsync(exAlumnoDTO.Email);
-            if (existeEmail)
+            if (await _usuarioRepository.ExisteEmailAsync(exAlumnoDTO.Email))
             {
                 throw new EmailAlreadyExistsException(exAlumnoDTO.Email);
             }
+            exAlumnoDTO.Validate();
             exAlumnoDTO.Contrasena = _passwordService.HashPassword(exAlumnoDTO.Contrasena);
             ExAlumno exAlumno = _mapper.Map<ExAlumno>(exAlumnoDTO);
             await _exAlumnoRepository.CreateExAlumnoAsync(exAlumno);
