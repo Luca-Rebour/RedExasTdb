@@ -30,7 +30,7 @@ namespace RedExas.api.Controllers
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            Emprendimiento e = await _createEmprendimiento.ExecuteAsync(createEmprendimientoDTO, userId);
+            EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(createEmprendimientoDTO, userId);
             return Ok(e);
         }
 

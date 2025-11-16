@@ -28,7 +28,7 @@ namespace RedExas.api.Controllers
                 return Unauthorized(new { message = result.Error });
             }
 
-            return Ok(result.Token);
+            return Ok(result);
         }
 
 

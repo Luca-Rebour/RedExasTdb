@@ -11,6 +11,6 @@ namespace Application.Interfaces.UseCases.Emprendimientos
 {
     public interface ICreateEmprendimiento
     {
-        Task<Emprendimiento> ExecuteAsync(CreateEmprendimientoDTO emprendimientoDTO, Guid userId);
+        Task<EmprendimientoDTO> ExecuteAsync(CreateEmprendimientoDTO emprendimientoDTO, Guid userId);
     }
 }

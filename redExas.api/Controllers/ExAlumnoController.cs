@@ -33,7 +33,7 @@ namespace RedExas.api.Controllers
         }
 
         [HttpGet("emprendimientos")]
-        public async Task<IActionResult> getEmprendimientos([FromBody] Guid userId)
+        public async Task<IActionResult> getEmprendimientos([FromQuery] Guid userId)
         {
             List<EmprendimientoDTO> e = await _getEmprendimientosDeExAlumno.ExecuteAsync(userId);
             return Ok(e);
