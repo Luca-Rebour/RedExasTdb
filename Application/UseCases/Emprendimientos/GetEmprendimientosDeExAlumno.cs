@@ -11,19 +11,18 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Emprendimientos
 {
-    public class GetAllEmprendimientos : IGetAllEmprendimientos
+    public class GetEmprendimientosDeExAlumno : IGetEmprendimientosDeExAlumno
     {
         private readonly IEmprendimientoRepository _emprendimientoRepository;
         private readonly IMapper _mapper;
-        public GetAllEmprendimientos(IEmprendimientoRepository emprendimientoRepository, IMapper mapper)
+        public GetEmprendimientosDeExAlumno(IEmprendimientoRepository emprendimientoRepository, IMapper mapper)
         {
             _emprendimientoRepository = emprendimientoRepository;
             _mapper = mapper;
         }
-
-        public async Task<List<EmprendimientoDTO>> ExecuteAsync()
+        public async Task<List<EmprendimientoDTO>> ExecuteAsync(Guid userId)
         {
-            List<Emprendimiento> emprendimientos = await _emprendimientoRepository.GetAllEmprendimientosAsync();
+            List<Emprendimiento> emprendimientos = await _emprendimientoRepository.GetEmprendimientosDeExAlumnoAsync(userId);
             List<EmprendimientoDTO> emprendimientoDTOs = _mapper.Map<List<EmprendimientoDTO>>(emprendimientos);
             return emprendimientoDTOs;
         }

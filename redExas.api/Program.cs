@@ -139,10 +139,13 @@ namespace redExas.api
 
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
+            builder.Services.AddScoped<IGetAllExAlumnos, GetAllExAlumnos>();
 
             // Inyeccion de dependencias UseCases de Emprendimiento
             builder.Services.AddScoped<ICreateEmprendimiento, CreateEmprendimiento>();
             builder.Services.AddScoped<IGetAllEmprendimientos, GetAllEmprendimientos>();
+            builder.Services.AddScoped<IGetEmprendimientosDeExAlumno, GetEmprendimientosDeExAlumno>();
+            builder.Services.AddScoped<ISearchEmprendimiento, SearchEmprendimiento>();
 
             // Inyeccion de dependencias UseCases de Usuario
             builder.Services.AddScoped<ISignIn, SignIn>();

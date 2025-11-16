@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,11 @@ namespace Infrastructure.Repositories
             await _context.ExAlumnos.AddAsync(exAlumno);
             await _context.SaveChangesAsync();
             return exAlumno;
+        }
+
+        public async Task<List<ExAlumno>> GetAllExAlumnosAsync()
+        {
+            return await _context.ExAlumnos.ToListAsync();
         }
     }
 }

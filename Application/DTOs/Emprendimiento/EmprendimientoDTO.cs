@@ -10,10 +10,13 @@ namespace Application.DTOs.Emprendimiento
 {
     public class EmprendimientoDTO
     {
-        public Guid Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
-        public string Ubicacion { get; set; } = string.Empty;
+        public Guid IdEmprendimiento { get; set; }
+        public Guid IdServicio { get; set; }
+        public string NombreEmprendimiento { get; set; } = string.Empty;
+        public string DescripcionEmprendimiento { get; set; } = string.Empty;
+        public string UbicacionEmprendimiento { get; set; } = string.Empty;
+        public string NombreServicio { get; set; } = string.Empty;
+        public string DescripcionServicio { get; set; } = string.Empty;
 
         public ExAlumnoDTO? ExAlumno { get; set; }
     }

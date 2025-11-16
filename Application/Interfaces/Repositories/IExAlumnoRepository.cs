@@ -10,5 +10,6 @@ namespace Application.Interfaces.Repositories
     public interface IExAlumnoRepository
     {
         Task<ExAlumno> CreateExAlumnoAsync (ExAlumno exAlumno);
+        Task<List<ExAlumno>> GetAllExAlumnosAsync ();
     }
 }

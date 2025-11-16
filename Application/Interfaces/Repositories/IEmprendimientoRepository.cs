@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.Emprendimiento;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace Application.Interfaces.Repositories
     public interface IEmprendimientoRepository
     {
         Task<Emprendimiento> CreateEmprendimientoAsync(Emprendimiento emprendimiento);
-        Task<List<Emprendimiento>> GetAllEmprendimientoAsync();
+        Task<List<Emprendimiento>> GetAllEmprendimientosAsync();
+        Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId);
+        Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string query);
     }
 }

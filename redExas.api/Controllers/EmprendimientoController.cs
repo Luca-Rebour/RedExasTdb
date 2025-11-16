@@ -15,11 +15,13 @@ namespace RedExas.api.Controllers
     {
         private readonly ICreateEmprendimiento _createEmprendimiento;
         private readonly IGetAllEmprendimientos _getAllEmprendimientos;
+        private readonly ISearchEmprendimiento _searchEmprendimiento;
 
-        public EmprendimientoController(ICreateEmprendimiento createEmprendimiento, IGetAllEmprendimientos getAllEmprendimientos)
+        public EmprendimientoController(ICreateEmprendimiento createEmprendimiento, IGetAllEmprendimientos getAllEmprendimientos, ISearchEmprendimiento searchEmprendimiento)
         {
             _createEmprendimiento = createEmprendimiento;
             _getAllEmprendimientos = getAllEmprendimientos;
+            _searchEmprendimiento = searchEmprendimiento;
         }
 
         [HttpPost("create")]
@@ -38,5 +40,14 @@ namespace RedExas.api.Controllers
             List<EmprendimientoDTO> e = await _getAllEmprendimientos.ExecuteAsync();
             return Ok(e);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchEmprendimiento([FromQuery] string query)
+        {
+            var e = await _searchEmprendimiento.ExecuteAsync(query);
+            return Ok(e);
+        }
+
+
     }
 }

@@ -8,7 +8,7 @@ namespace Application.DTOs.Estudio
 {
     public class EstudioDTO
     {
-        public Guid Id { get; private set; }
-        public string Titulo { get; private set; } = string.Empty;
+        public Guid Id { get; set; }
+        public string Titulo { get; set; } = string.Empty;
     }
 }
