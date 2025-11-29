@@ -12,8 +12,6 @@ namespace Domain.Entities
         public int AnioEgreso { get; private set; }
 
         public ICollection<Estudio> Estudios { get; private set; } = new List<Estudio>();
-        public Guid? CategoriaId { get; private set; }
-        public Categoria? Categoria { get; private set; }
 
     }
 }

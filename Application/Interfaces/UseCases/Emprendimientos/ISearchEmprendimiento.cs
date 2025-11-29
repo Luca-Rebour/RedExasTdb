@@ -9,6 +9,6 @@ namespace Application.Interfaces.UseCases.Emprendimientos
 {
     public interface ISearchEmprendimiento
     {
-        Task<List<EmprendimientoDTO>> ExecuteAsync(string query);
+        Task<List<EmprendimientoDTO>> ExecuteAsync(string? query, Guid? estudioId);
     }
 }

@@ -25,15 +25,21 @@ namespace Infrastructure.Repositories
         {
             await _context.Emprendimientos.AddAsync(emprendimiento);
             await _context.SaveChangesAsync();
+
             await _context.Entry(emprendimiento)
-            .Reference(e => e.ExAlumno)
-            .LoadAsync();
+                .Reference(e => e.ExAlumno)
+                .LoadAsync();
+
+            await _context.Entry(emprendimiento)
+                .Reference(e => e.Estudio)
+                .LoadAsync();
+
             return emprendimiento;
         }
 
         public async Task<List<Emprendimiento>> GetAllEmprendimientosAsync()
         {
-            return await _context.Emprendimientos.Include(e => e.ExAlumno).ToListAsync();
+            return await _context.Emprendimientos.Include(e => e.ExAlumno).Include(d => d.Disponibilidad).Include(d => d.Disponibilidad.Dias).Include(s => s.servicios).ToListAsync();
         }
 
         public async Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId)
@@ -41,25 +47,37 @@ namespace Infrastructure.Repositories
             return await _context.Emprendimientos.Include(e => e.ExAlumno).Where(e => e.ExAlumnoId.Equals(userId)).ToListAsync();
         }
 
-        public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string query)
+        public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(
+            string? query,
+            Guid? estudioId
+        )
         {
             query ??= string.Empty;
 
             var flat = await (
                 from e in _context.Emprendimientos
+                join est in _context.Estudios
+                    on e.EstudioId equals est.Id
                 join s in _context.Servicios
                     on e.Id equals s.EmprendimientoId into serviciosGroup
                 from s in serviciosGroup.DefaultIfEmpty()
                 join ex in _context.ExAlumnos
                     on e.ExAlumnoId equals ex.Id
-                where EF.Functions.ILike(e.Ubicacion, $"%{query}%")
-                   || EF.Functions.ILike(e.Nombre, $"%{query}%")
-                   || (s != null && EF.Functions.ILike(s.Nombre, $"%{query}%"))
+                where
+                    // búsqueda por texto: departamento, dirección o nombre del emprendimiento
+                    (string.IsNullOrEmpty(query)
+                        || EF.Functions.ILike(e.Departamento, $"%{query}%")
+                        || EF.Functions.ILike(e.Direccion, $"%{query}%")
+                        || EF.Functions.ILike(e.Nombre, $"%{query}%")
+                    )
+                    // filtro por tipo de emprendimiento (Estudio)
+                    && (!estudioId.HasValue || est.Id.Equals(estudioId))
                 select new
                 {
                     Emprendimiento = e,
                     Servicio = s,
-                    ExAlumno = ex
+                    ExAlumno = ex,
+                    Estudio = est
                 }
             ).ToListAsync();
 
@@ -75,7 +93,13 @@ namespace Infrastructure.Repositories
 
                         Nombre = first.Emprendimiento.Nombre,
                         Descripcion = first.Emprendimiento.Descripcion,
-                        Ubicacion = first.Emprendimiento.Ubicacion,
+                        Direccion = first.Emprendimiento.Direccion,
+
+                        Estudio = new EstudioDTO
+                        {
+                            Id = first.Estudio.Id,
+                            Titulo = first.Estudio.Titulo
+                        },
 
                         servicios = g
                             .Where(x => x.Servicio != null)
@@ -92,8 +116,6 @@ namespace Infrastructure.Repositories
                             AnioEgreso = first.ExAlumno.AnioEgreso,
                             Nombre = first.ExAlumno.Nombre,
                             Apellido = first.ExAlumno.Apellido,
-                            Categoria = first.ExAlumno.Categoria,
-                            CategoriaId = first.ExAlumno.CategoriaId,
                             Estudios = first.ExAlumno.Estudios
                                 .Select(est => new EstudioDTO
                                 {
@@ -108,11 +130,6 @@ namespace Infrastructure.Repositories
 
             return result;
         }
-
-
-
-
-
 
     }
 }

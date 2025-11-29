@@ -12,18 +12,6 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categorias",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Nombre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categorias", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Estudios",
                 columns: table => new
                 {
@@ -92,18 +80,11 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Apellido = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    AnioEgreso = table.Column<int>(type: "integer", nullable: false),
-                    CategoriaId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AnioEgreso = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExAlumnos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ExAlumnos_Categorias_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_ExAlumnos_Usuarios_Id",
                         column: x => x.Id,
@@ -123,7 +104,8 @@ namespace Infrastructure.Migrations
                     Ubicacion = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Instituto = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     AdministradorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoriaId = table.Column<Guid>(type: "uuid", nullable: false)
+                    EspecialidadId = table.Column<Guid>(type: "uuid", nullable: true),
+                    EstudioId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,11 +117,10 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Cursos_Categorias_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Cursos_Estudios_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "Estudios",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -174,18 +155,11 @@ namespace Infrastructure.Migrations
                     Modalidad = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Direccion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Salario = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: true),
-                    CategoriaId = table.Column<Guid>(type: "uuid", nullable: false),
                     EmpresaId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OfertasLaborales", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OfertasLaborales_Categorias_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OfertasLaborales_Empresas_EmpresaId",
                         column: x => x.EmpresaId,
@@ -201,12 +175,21 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    Ubicacion = table.Column<string>(type: "text", nullable: false),
+                    Imagen = table.Column<string>(type: "text", nullable: false),
+                    Departamento = table.Column<string>(type: "text", nullable: false),
+                    Direccion = table.Column<string>(type: "text", nullable: false),
+                    EstudioId = table.Column<Guid>(type: "uuid", nullable: false),
                     ExAlumnoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Emprendimientos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Emprendimientos_Estudios_EstudioId",
+                        column: x => x.EstudioId,
+                        principalTable: "Estudios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Emprendimientos_ExAlumnos_ExAlumnoId",
                         column: x => x.ExAlumnoId,
@@ -260,13 +243,82 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OfertaLaboralEstudio",
+                columns: table => new
+                {
+                    EstudiosId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OfertasLaboralesId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OfertaLaboralEstudio", x => new { x.EstudiosId, x.OfertasLaboralesId });
+                    table.ForeignKey(
+                        name: "FK_OfertaLaboralEstudio_Estudios_EstudiosId",
+                        column: x => x.EstudiosId,
+                        principalTable: "Estudios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OfertaLaboralEstudio_OfertasLaborales_OfertasLaboralesId",
+                        column: x => x.OfertasLaboralesId,
+                        principalTable: "OfertasLaborales",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Disponibilidades",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    HoraInicio = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    HoraFin = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Disponibilidades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Disponibilidades_Emprendimientos_EmprendimientoId",
+                        column: x => x.EmprendimientoId,
+                        principalTable: "Emprendimientos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Portfolios",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Titulo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    Imagen = table.Column<string>(type: "text", nullable: false),
+                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Portfolios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Portfolios_Emprendimientos_EmprendimientoId",
+                        column: x => x.EmprendimientoId,
+                        principalTable: "Emprendimientos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Servicios",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false)
+                    IconName = table.Column<string>(type: "text", nullable: false),
+                    Costo = table.Column<double>(type: "double precision", nullable: true),
+                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmprendimientoId1 = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -274,6 +326,12 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Servicios_Emprendimientos_EmprendimientoId",
                         column: x => x.EmprendimientoId,
+                        principalTable: "Emprendimientos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Servicios_Emprendimientos_EmprendimientoId1",
+                        column: x => x.EmprendimientoId1,
                         principalTable: "Emprendimientos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -305,15 +363,61 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DisponibilidadDias",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DisponibilidadId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Dia = table.Column<int>(type: "integer", nullable: false),
+                    DisponibilidadId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisponibilidadDias", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DisponibilidadDias_Disponibilidades_DisponibilidadId",
+                        column: x => x.DisponibilidadId,
+                        principalTable: "Disponibilidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DisponibilidadDias_Disponibilidades_DisponibilidadId1",
+                        column: x => x.DisponibilidadId1,
+                        principalTable: "Disponibilidades",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Cursos_AdministradorId",
                 table: "Cursos",
                 column: "AdministradorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cursos_CategoriaId",
+                name: "IX_Cursos_EstudioId",
                 table: "Cursos",
-                column: "CategoriaId");
+                column: "EstudioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DisponibilidadDias_DisponibilidadId",
+                table: "DisponibilidadDias",
+                column: "DisponibilidadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DisponibilidadDias_DisponibilidadId1",
+                table: "DisponibilidadDias",
+                column: "DisponibilidadId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Disponibilidades_EmprendimientoId",
+                table: "Disponibilidades",
+                column: "EmprendimientoId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Emprendimientos_EstudioId",
+                table: "Emprendimientos",
+                column: "EstudioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Emprendimientos_ExAlumnoId",
@@ -331,19 +435,19 @@ namespace Infrastructure.Migrations
                 column: "ExAlumnosId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExAlumnos_CategoriaId",
-                table: "ExAlumnos",
-                column: "CategoriaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OfertasLaborales_CategoriaId",
-                table: "OfertasLaborales",
-                column: "CategoriaId");
+                name: "IX_OfertaLaboralEstudio_OfertasLaboralesId",
+                table: "OfertaLaboralEstudio",
+                column: "OfertasLaboralesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OfertasLaborales_EmpresaId",
                 table: "OfertasLaborales",
                 column: "EmpresaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Portfolios_EmprendimientoId",
+                table: "Portfolios",
+                column: "EmprendimientoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Publicaciones_ExAlumnoId",
@@ -366,6 +470,11 @@ namespace Infrastructure.Migrations
                 column: "EmprendimientoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Servicios_EmprendimientoId1",
+                table: "Servicios",
+                column: "EmprendimientoId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",
                 table: "Usuarios",
                 column: "Email",
@@ -379,13 +488,19 @@ namespace Infrastructure.Migrations
                 name: "Cursos");
 
             migrationBuilder.DropTable(
+                name: "DisponibilidadDias");
+
+            migrationBuilder.DropTable(
                 name: "Eventos");
 
             migrationBuilder.DropTable(
                 name: "ExAlumnoEstudio");
 
             migrationBuilder.DropTable(
-                name: "OfertasLaborales");
+                name: "OfertaLaboralEstudio");
+
+            migrationBuilder.DropTable(
+                name: "Portfolios");
 
             migrationBuilder.DropTable(
                 name: "Respuestas");
@@ -394,13 +509,13 @@ namespace Infrastructure.Migrations
                 name: "Servicios");
 
             migrationBuilder.DropTable(
+                name: "Disponibilidades");
+
+            migrationBuilder.DropTable(
                 name: "Administradores");
 
             migrationBuilder.DropTable(
-                name: "Estudios");
-
-            migrationBuilder.DropTable(
-                name: "Empresas");
+                name: "OfertasLaborales");
 
             migrationBuilder.DropTable(
                 name: "Publicaciones");
@@ -409,10 +524,13 @@ namespace Infrastructure.Migrations
                 name: "Emprendimientos");
 
             migrationBuilder.DropTable(
-                name: "ExAlumnos");
+                name: "Empresas");
 
             migrationBuilder.DropTable(
-                name: "Categorias");
+                name: "Estudios");
+
+            migrationBuilder.DropTable(
+                name: "ExAlumnos");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

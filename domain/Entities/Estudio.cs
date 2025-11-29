@@ -12,6 +12,7 @@ namespace Domain.Entities
         public string Titulo { get; private set; } = string.Empty;
 
         public ICollection<ExAlumno> ExAlumnos { get; private set; } = new List<ExAlumno>();
+        public ICollection<OfertaLaboral> OfertasLaborales { get; set; } = new List<OfertaLaboral>();
 
     }
 }

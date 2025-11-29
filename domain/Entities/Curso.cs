@@ -16,11 +16,10 @@ namespace Domain.Entities
         public string? Ubicacion { get; private set; } // NULL permitido
         public string Instituto { get; private set; } = string.Empty;
 
-
         public Guid AdministradorId { get; private set; }
         public Administrador? Administrador { get; private set; }
 
-        public Guid CategoriaId { get; private set; }
-        public Categoria? Categoria { get; private set; }
+        public Guid? EspecialidadId { get; private set; } // NULL permitido ya que puede haber un curso que sea general, no para una especialidad en concreto, en este caso podria mostrarse "General" en el frontend
+        public Estudio? Estudio { get; private set; } 
     }
 }

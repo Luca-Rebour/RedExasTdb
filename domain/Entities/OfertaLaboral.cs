@@ -16,11 +16,9 @@ namespace Domain.Entities
         public decimal? Salario { get; private set; } // NULL permitido
 
 
-        public Guid CategoriaId { get; set; }
-        public Categoria? Categoria { get; set; }
+        public Guid EmpresaId { get; private set; }
+        public Empresa? Empresa { get; private set; }
 
-
-        public Guid EmpresaId { get; set; }
-        public Empresa? Empresa { get; set; }
+        public ICollection<Estudio> Estudios { get; private set; }
     }
 }

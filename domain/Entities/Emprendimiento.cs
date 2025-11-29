@@ -8,14 +8,23 @@ namespace Domain.Entities
 {
     public class Emprendimiento
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
-        public string Ubicacion { get; private set; } = string.Empty;
+        public string Imagen { get; private set; } = string.Empty;
+        public string Departamento { get; private set; } = string.Empty;
+        public string Direccion { get; private set; } = string.Empty;
 
+        // EL ESTUDIO VENDRIA A SER UNA CATEGORIA DEL EMPRENDIMIENTO, PUEDE SER INFORMATICA, MECANICA AUTOMOTRIZ, 
+        // MECANICA INDUSTRIAL, ADMINISTRACION, DEPORTE, DISENO GRAFICO, CARPINTERIA
+        public Guid EstudioId { get; private set; }
+        public Estudio? Estudio { get; private set; }  
+        public Disponibilidad Disponibilidad { get; private set; }
 
         public Guid ExAlumnoId { get; private set; }
         public ExAlumno? ExAlumno { get; private set; }
+
+        public IEnumerable<Servicio> servicios { get; private set; } = new List<Servicio>();
 
         public void setExAlumnoId(Guid exAlumnoId)
         {

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251001224732_inicial")]
+    [Migration("20251129192311_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -25,22 +25,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Categoria", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categorias");
-                });
-
             modelBuilder.Entity("Domain.Entities.Curso", b =>
                 {
                     b.Property<Guid>("Id")
@@ -50,13 +34,16 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("AdministradorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CategoriaId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid?>("EspecialidadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("EstudioId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Instituto")
                         .IsRequired()
@@ -81,9 +68,56 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdministradorId");
 
-                    b.HasIndex("CategoriaId");
+                    b.HasIndex("EstudioId");
 
                     b.ToTable("Cursos");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Disponibilidad", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EmprendimientoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeOnly>("HoraFin")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<TimeOnly>("HoraInicio")
+                        .HasColumnType("time without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmprendimientoId")
+                        .IsUnique();
+
+                    b.ToTable("Disponibilidades");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DisponibilidadDia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Dia")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("DisponibilidadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("DisponibilidadId1")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DisponibilidadId");
+
+                    b.HasIndex("DisponibilidadId1");
+
+                    b.ToTable("DisponibilidadDias");
                 });
 
             modelBuilder.Entity("Domain.Entities.Emprendimiento", b =>
@@ -92,24 +126,37 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("EstudioId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("ExAlumnoId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Imagen")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Ubicacion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("EstudioId");
 
                     b.HasIndex("ExAlumnoId");
 
@@ -172,9 +219,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CategoriaId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -203,11 +247,42 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId");
-
                     b.HasIndex("EmpresaId");
 
                     b.ToTable("OfertasLaborales");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Portfolio", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("EmprendimientoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Imagen")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmprendimientoId");
+
+                    b.ToTable("Portfolios");
                 });
 
             modelBuilder.Entity("Domain.Entities.Publicacion", b =>
@@ -268,6 +343,9 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<double?>("Costo")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -275,6 +353,13 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("EmprendimientoId")
                         .HasColumnType("uuid");
+
+                    b.Property<Guid?>("EmprendimientoId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IconName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -284,6 +369,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmprendimientoId");
+
+                    b.HasIndex("EmprendimientoId1");
 
                     b.ToTable("Servicios");
                 });
@@ -334,6 +421,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("ExAlumnoEstudio", (string)null);
                 });
 
+            modelBuilder.Entity("EstudioOfertaLaboral", b =>
+                {
+                    b.Property<Guid>("EstudiosId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OfertasLaboralesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("EstudiosId", "OfertasLaboralesId");
+
+                    b.HasIndex("OfertasLaboralesId");
+
+                    b.ToTable("OfertaLaboralEstudio", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Administrador", b =>
                 {
                     b.HasBaseType("Domain.Entities.Usuario");
@@ -375,11 +477,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<Guid?>("CategoriaId")
-                        .HasColumnType("uuid");
-
-                    b.HasIndex("CategoriaId");
-
                     b.ToTable("ExAlumnos", (string)null);
                 });
 
@@ -391,24 +488,56 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Categoria", "Categoria")
+                    b.HasOne("Domain.Entities.Estudio", "Estudio")
                         .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EstudioId");
 
                     b.Navigation("Administrador");
 
-                    b.Navigation("Categoria");
+                    b.Navigation("Estudio");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Disponibilidad", b =>
+                {
+                    b.HasOne("Domain.Entities.Emprendimiento", "Emprendimiento")
+                        .WithOne("Disponibilidad")
+                        .HasForeignKey("Domain.Entities.Disponibilidad", "EmprendimientoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Emprendimiento");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DisponibilidadDia", b =>
+                {
+                    b.HasOne("Domain.Entities.Disponibilidad", "Disponibilidad")
+                        .WithMany()
+                        .HasForeignKey("DisponibilidadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Disponibilidad", null)
+                        .WithMany("Dias")
+                        .HasForeignKey("DisponibilidadId1");
+
+                    b.Navigation("Disponibilidad");
                 });
 
             modelBuilder.Entity("Domain.Entities.Emprendimiento", b =>
                 {
+                    b.HasOne("Domain.Entities.Estudio", "Estudio")
+                        .WithMany()
+                        .HasForeignKey("EstudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.ExAlumno", "ExAlumno")
                         .WithMany()
                         .HasForeignKey("ExAlumnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Estudio");
 
                     b.Navigation("ExAlumno");
                 });
@@ -426,21 +555,24 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.OfertaLaboral", b =>
                 {
-                    b.HasOne("Domain.Entities.Categoria", "Categoria")
-                        .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Empresa", "Empresa")
                         .WithMany()
                         .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Categoria");
-
                     b.Navigation("Empresa");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Portfolio", b =>
+                {
+                    b.HasOne("Domain.Entities.Emprendimiento", "Emprendimiento")
+                        .WithMany()
+                        .HasForeignKey("EmprendimientoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Emprendimiento");
                 });
 
             modelBuilder.Entity("Domain.Entities.Publicacion", b =>
@@ -481,6 +613,11 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Emprendimiento", null)
+                        .WithMany("servicios")
+                        .HasForeignKey("EmprendimientoId1")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("Emprendimiento");
                 });
 
@@ -495,6 +632,21 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ExAlumno", null)
                         .WithMany()
                         .HasForeignKey("ExAlumnosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EstudioOfertaLaboral", b =>
+                {
+                    b.HasOne("Domain.Entities.Estudio", null)
+                        .WithMany()
+                        .HasForeignKey("EstudiosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.OfertaLaboral", null)
+                        .WithMany()
+                        .HasForeignKey("OfertasLaboralesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -519,18 +671,24 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ExAlumno", b =>
                 {
-                    b.HasOne("Domain.Entities.Categoria", "Categoria")
-                        .WithMany()
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Domain.Entities.Usuario", null)
                         .WithOne()
                         .HasForeignKey("Domain.Entities.ExAlumno", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Categoria");
+            modelBuilder.Entity("Domain.Entities.Disponibilidad", b =>
+                {
+                    b.Navigation("Dias");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Emprendimiento", b =>
+                {
+                    b.Navigation("Disponibilidad")
+                        .IsRequired();
+
+                    b.Navigation("servicios");
                 });
 #pragma warning restore 612, 618
         }

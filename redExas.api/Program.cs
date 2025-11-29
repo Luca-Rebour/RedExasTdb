@@ -124,6 +124,8 @@ namespace redExas.api
                 cfg.AddProfile<EmprendimientoProfile>();
                 cfg.AddProfile <ExAlumnoProfile>();
                 cfg.AddProfile <EmpresaProfile>();
+                cfg.AddProfile <DisponibilidadProfile>();
+                cfg.AddProfile <EstudioProfile>();
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

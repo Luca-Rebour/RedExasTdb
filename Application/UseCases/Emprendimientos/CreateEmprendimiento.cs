@@ -33,8 +33,14 @@ namespace Application.UseCases.Emprendimientos
         {
             emprendimientoDTO.validate();
             Emprendimiento emprendimiento = _mapper.Map<Emprendimiento>(emprendimientoDTO);
+            emprendimiento.Disponibilidad.setEmprendimientoId(emprendimiento.Id);
+
             emprendimiento.setExAlumnoId(userId);
-            await _emprendimientoRepository.CreateEmprendimientoAsync(emprendimiento);
+            foreach (DisponibilidadDia disponibilidadDia in emprendimiento.Disponibilidad.Dias)
+            {
+                disponibilidadDia.setDispoinibilidadId(emprendimiento.Disponibilidad.Id);
+            }
+            emprendimiento = await _emprendimientoRepository.CreateEmprendimientoAsync(emprendimiento);
             EmprendimientoDTO emprendimientoCreadoDTO = _mapper.Map<EmprendimientoDTO>(emprendimiento);
             return emprendimientoCreadoDTO;
         }

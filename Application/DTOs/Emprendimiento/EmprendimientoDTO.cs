@@ -1,4 +1,6 @@
-﻿using Application.DTOs.ExAlumnos;
+﻿using Application.DTOs.Disponibilidad;
+using Application.DTOs.Estudio;
+using Application.DTOs.ExAlumnos;
 using Application.DTOs.Servicio;
 using Domain.Entities;
 using System;
@@ -14,8 +16,12 @@ namespace Application.DTOs.Emprendimiento
         public Guid Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
-        public string Ubicacion { get; set; } = string.Empty;
-        public List<ServicioDTO> servicios { get; set; } = new List<ServicioDTO>();
+        public string Imagen { get; set; } = string.Empty;
+        public string Departamento { get; set; } = string.Empty;
+        public string Direccion { get; set; } = string.Empty;
+        public EstudioDTO? Estudio { get; set; }
+        public ICollection<ServicioDTO> servicios { get; set; } = new List<ServicioDTO>();
+        public DisponibilidadDTO Disponibilidad { get; set; }
         public ExAlumnoDTO? ExAlumno { get; set; }
     }
 }

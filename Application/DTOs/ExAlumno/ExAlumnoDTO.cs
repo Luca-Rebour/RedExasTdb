@@ -15,7 +15,5 @@ namespace Application.DTOs.ExAlumnos
         public int AnioEgreso { get; set; }
 
         public ICollection<EstudioDTO> Estudios { get; set; } = new List<EstudioDTO>();
-        public Guid? CategoriaId { get; set; }
-        public Categoria? Categoria { get; set; }
     }
 }

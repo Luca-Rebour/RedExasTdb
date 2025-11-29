@@ -13,6 +13,6 @@ namespace Application.Interfaces.Repositories
         Task<Emprendimiento> CreateEmprendimientoAsync(Emprendimiento emprendimiento);
         Task<List<Emprendimiento>> GetAllEmprendimientosAsync();
         Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId);
-        Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string query);
+        Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string? query, Guid? estudioId);
     }
 }

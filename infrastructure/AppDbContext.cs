@@ -15,7 +15,6 @@ namespace Infrastructure
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
     : base(options) { }
-        public DbSet<Categoria> Categorias => Set<Categoria>();
         public DbSet<Curso> Cursos => Set<Curso>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<Administrador> Administadores => Set<Administrador>();
@@ -28,6 +27,9 @@ namespace Infrastructure
         public DbSet<Publicacion> Publicaciones => Set<Publicacion>();
         public DbSet<Respuesta> Respuestas => Set<Respuesta>();
         public DbSet<Servicio> Servicios => Set<Servicio>();
+        public DbSet<Portfolio> Portfolios => Set<Portfolio>();
+        public DbSet<Disponibilidad> Disponibilidades => Set<Disponibilidad>();
+        public DbSet<DisponibilidadDia> DisponibilidadDias => Set<DisponibilidadDia>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,11 +75,6 @@ namespace Infrastructure
                     .WithMany(e => e.ExAlumnos)
                     .UsingEntity(j => j.ToTable("ExAlumnoEstudio"));
 
-                builder.HasOne(a => a.Categoria)
-                       .WithMany()
-                       .HasForeignKey(a => a.CategoriaId)
-                       .IsRequired(false)
-                       .OnDelete(DeleteBehavior.SetNull);
 
             });
 
@@ -185,6 +182,10 @@ namespace Infrastructure
                         .HasForeignKey(a => a.ExAlumnoId)
                         .OnDelete(DeleteBehavior.Cascade);
 
+                builder.HasMany(a => a.servicios)
+                        .WithOne()
+                        .OnDelete(DeleteBehavior.Cascade);
+
             });
 
 
@@ -215,10 +216,9 @@ namespace Infrastructure
                         .HasForeignKey(a => a.EmpresaId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-                builder.HasOne(a => a.Categoria)
-                        .WithMany()
-                        .HasForeignKey(a => a.CategoriaId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                builder.HasMany(e => e.Estudios)
+                        .WithMany(o => o.OfertasLaborales)
+                        .UsingEntity(j => j.ToTable("OfertaLaboralEstudio"));
 
             });
 
@@ -258,13 +258,34 @@ namespace Infrastructure
 
             });
 
-            modelBuilder.Entity<Categoria>(builder =>
+            modelBuilder.Entity<Portfolio>(builder =>
             {
                 builder.HasKey(a => a.Id);
 
-                builder.Property(a => a.Nombre)
+                builder.Property(a => a.Titulo)
                        .IsRequired()
-                       .HasMaxLength(100);
+                       .HasMaxLength(50);
+
+                builder.Property(a => a.Descripcion)
+                       .IsRequired()
+                       .HasMaxLength(1000);
+
+                builder.HasOne(a => a.Emprendimiento)
+                     .WithMany()
+                     .HasForeignKey(a => a.EmprendimientoId)
+                     .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+
+            modelBuilder.Entity<DisponibilidadDia>(builder =>
+            {
+                builder.HasKey(a => a.Id);
+
+                builder.HasOne(a => a.Disponibilidad)
+                     .WithMany()
+                     .HasForeignKey(a => a.DisponibilidadId)
+                     .OnDelete(DeleteBehavior.Cascade);
 
             });
 

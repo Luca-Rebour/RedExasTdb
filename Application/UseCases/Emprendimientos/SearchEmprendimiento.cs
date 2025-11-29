@@ -20,9 +20,9 @@ namespace Application.UseCases.Emprendimientos
             _emprendimientoRepository = emprendimientoRepository;
             _mapper = mapper;
         }
-        public async Task<List<EmprendimientoDTO>> ExecuteAsync(string query)
+        public async Task<List<EmprendimientoDTO>> ExecuteAsync(string? query, Guid? estudioId)
         {
-            List<EmprendimientoDTO> emprendimientoDTOs = await _emprendimientoRepository.SearchEmprendimientoAsync(query);
+            List<EmprendimientoDTO> emprendimientoDTOs = await _emprendimientoRepository.SearchEmprendimientoAsync(query, estudioId);
             return emprendimientoDTOs;
         }
     }
