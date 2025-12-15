@@ -21,6 +21,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Application.UseCases.Empresas;
 using Application.Interfaces.UseCases.Empresas;
+using Application.Interfaces.UseCases.Servicios;
+using Application.UseCases.Servicios;
 
 namespace redExas.api
 {
@@ -126,6 +128,7 @@ namespace redExas.api
                 cfg.AddProfile <EmpresaProfile>();
                 cfg.AddProfile <DisponibilidadProfile>();
                 cfg.AddProfile <EstudioProfile>();
+                cfg.AddProfile <ServicioProfile>();
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
@@ -138,6 +141,7 @@ namespace redExas.api
             builder.Services.AddScoped<IEmprendimientoRepository, EmprendimientoRepository>();
             builder.Services.AddScoped<IExAlumnoRepository, ExAlumnoRepository>();
             builder.Services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
@@ -154,6 +158,9 @@ namespace redExas.api
 
             // Inyeccion de dependencias UseCases de Empresas
             builder.Services.AddScoped<ICreateEmpresa, CreateEmpresa>();
+
+            // Inyeccion de dependencias UseCases de Servicios
+            builder.Services.AddScoped<IGetServiciosDeExAlumno, GetServiciosDeExAlumno>();
 
             // Inyeccion de dependencias UseCases de Servicios
             builder.Services.AddScoped<IJwtService, JwtService>();

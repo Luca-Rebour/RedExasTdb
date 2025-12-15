@@ -70,6 +70,37 @@ namespace Infrastructure.Migrations
                     b.ToTable("Cursos");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Direccion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Barrio")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Calle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ciudad")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Esquina")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroPuerta")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Direccion");
+                });
+
             modelBuilder.Entity("Domain.Entities.Disponibilidad", b =>
                 {
                     b.Property<Guid>("Id")
@@ -132,9 +163,8 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("DireccionId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("EstudioId")
                         .HasColumnType("uuid");
@@ -152,6 +182,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DireccionId")
+                        .IsUnique();
 
                     b.HasIndex("EstudioId");
 
@@ -222,8 +255,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(1000)");
 
                     b.Property<string>("Direccion")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("EmpresaId")
                         .HasColumnType("uuid");
@@ -383,6 +415,9 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<Guid>("DireccionId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -394,6 +429,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DireccionId")
+                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -448,11 +486,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Empresa", b =>
                 {
                     b.HasBaseType("Domain.Entities.Usuario");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -522,6 +555,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Emprendimiento", b =>
                 {
+                    b.HasOne("Domain.Entities.Direccion", "Direccion")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Emprendimiento", "DireccionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Estudio", "Estudio")
                         .WithMany()
                         .HasForeignKey("EstudioId")
@@ -533,6 +572,8 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("ExAlumnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Direccion");
 
                     b.Navigation("Estudio");
 
@@ -616,6 +657,17 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Emprendimiento");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Usuario", b =>
+                {
+                    b.HasOne("Domain.Entities.Direccion", "Direccion")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Usuario", "DireccionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Direccion");
                 });
 
             modelBuilder.Entity("EstudioExAlumno", b =>

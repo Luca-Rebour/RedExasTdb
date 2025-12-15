@@ -9,7 +9,6 @@ namespace Domain.Entities
     public class Empresa : Usuario
     {
         public string Telefono { get; private set; } = string.Empty;
-        public string Direccion { get; private set; } = string.Empty;
 
     }
 }

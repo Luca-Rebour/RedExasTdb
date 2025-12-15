@@ -12,6 +12,22 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Direccion",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Calle = table.Column<string>(type: "text", nullable: false),
+                    Esquina = table.Column<string>(type: "text", nullable: false),
+                    NumeroPuerta = table.Column<string>(type: "text", nullable: false),
+                    Barrio = table.Column<string>(type: "text", nullable: false),
+                    Ciudad = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Direccion", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Estudios",
                 columns: table => new
                 {
@@ -30,11 +46,18 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Contrasena = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                    Contrasena = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    DireccionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Direccion_DireccionId",
+                        column: x => x.DireccionId,
+                        principalTable: "Direccion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,8 +83,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Telefono = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    Direccion = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    Telefono = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -153,7 +175,7 @@ namespace Infrastructure.Migrations
                     Titulo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     Modalidad = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Direccion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Direccion = table.Column<string>(type: "text", nullable: true),
                     Salario = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: true),
                     EmpresaId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -177,13 +199,19 @@ namespace Infrastructure.Migrations
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     Imagen = table.Column<string>(type: "text", nullable: false),
                     Departamento = table.Column<string>(type: "text", nullable: false),
-                    Direccion = table.Column<string>(type: "text", nullable: false),
                     EstudioId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ExAlumnoId = table.Column<Guid>(type: "uuid", nullable: false)
+                    ExAlumnoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DireccionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Emprendimientos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Emprendimientos_Direccion_DireccionId",
+                        column: x => x.DireccionId,
+                        principalTable: "Direccion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Emprendimientos_Estudios_EstudioId",
                         column: x => x.EstudioId,
@@ -415,6 +443,12 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Emprendimientos_DireccionId",
+                table: "Emprendimientos",
+                column: "DireccionId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Emprendimientos_EstudioId",
                 table: "Emprendimientos",
                 column: "EstudioId");
@@ -473,6 +507,12 @@ namespace Infrastructure.Migrations
                 name: "IX_Servicios_EmprendimientoId1",
                 table: "Servicios",
                 column: "EmprendimientoId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_DireccionId",
+                table: "Usuarios",
+                column: "DireccionId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",
@@ -534,6 +574,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Direccion");
         }
     }
 }

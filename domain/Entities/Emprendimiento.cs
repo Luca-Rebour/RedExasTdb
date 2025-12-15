@@ -12,8 +12,6 @@ namespace Domain.Entities
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
         public string Imagen { get; private set; } = string.Empty;
-        public string Departamento { get; private set; } = string.Empty;
-        public string Direccion { get; private set; } = string.Empty;
 
         // EL ESTUDIO VENDRIA A SER UNA CATEGORIA DEL EMPRENDIMIENTO, PUEDE SER INFORMATICA, MECANICA AUTOMOTRIZ, 
         // MECANICA INDUSTRIAL, ADMINISTRACION, DEPORTE, DISENO GRAFICO, CARPINTERIA
@@ -25,6 +23,8 @@ namespace Domain.Entities
         public ExAlumno? ExAlumno { get; private set; }
 
         public IEnumerable<Servicio> servicios { get; private set; } = new List<Servicio>();
+        public Guid DireccionId { get; private set; }
+        public Direccion Direccion { get; private set; }
 
         public void setExAlumnoId(Guid exAlumnoId)
         {

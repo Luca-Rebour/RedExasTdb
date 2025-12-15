@@ -39,6 +39,13 @@ namespace RedExas.api.Controllers
             return Ok(e);
         }
 
+        [HttpGet("servicios")]
+        public async Task<IActionResult> getServicios([FromQuery] Guid userId)
+        {
+            List<EmprendimientoDTO> e = await _getEmprendimientosDeExAlumno.ExecuteAsync(userId);
+            return Ok(e);
+        }
+
         [HttpGet("getAll")]
         public async Task<IActionResult> getAllExAlumnos()
         {

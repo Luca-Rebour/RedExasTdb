@@ -46,6 +46,17 @@ namespace Infrastructure
                 b.Property(u => u.Contrasena).IsRequired().HasMaxLength(255);
 
                 b.HasIndex(u => u.Email).IsUnique();
+
+                b.HasOne(e => e.Direccion)
+                 .WithOne()
+                 .HasForeignKey<Usuario>(e => e.DireccionId)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Direccion>(b =>
+            {
+                b.HasKey(d => d.Id);
+
             });
 
             modelBuilder.Entity<ExAlumno>().ToTable("ExAlumnos");
@@ -84,10 +95,6 @@ namespace Infrastructure
                 builder.Property(a => a.Telefono)
                        .IsRequired()
                        .HasMaxLength(15);
-
-                builder.Property(a => a.Direccion)
-                     .IsRequired()
-                     .HasMaxLength(100);
 
             });
 
@@ -185,6 +192,11 @@ namespace Infrastructure
                 builder.HasMany(a => a.servicios)
                         .WithOne()
                         .OnDelete(DeleteBehavior.Cascade);
+                
+                builder.HasOne(a => a.Direccion)
+                 .WithOne()
+                 .HasForeignKey<Emprendimiento>(a => a.DireccionId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
             });
 
@@ -205,9 +217,6 @@ namespace Infrastructure
                        .IsRequired()
                        .HasMaxLength(50);
 
-                builder.Property(a => a.Direccion)
-                      .HasMaxLength(50);
-
                 builder.Property(a => a.Salario)
                        .HasPrecision(10, 2);                        
 
@@ -219,6 +228,8 @@ namespace Infrastructure
                 builder.HasMany(e => e.Estudios)
                         .WithMany(o => o.OfertasLaborales)
                         .UsingEntity(j => j.ToTable("OfertaLaboralEstudio"));
+
+
 
             });
 

@@ -17,7 +17,6 @@ namespace Application.DTOs.Emprendimiento
         public string Direccion { get; set; } = string.Empty;
         public Guid? EstudioId { get; set; }
         public CreateDisponibilidadDTO? Disponibilidad { get; set; }
-
         public IFormFile? Logo { get; set; }
     }
 

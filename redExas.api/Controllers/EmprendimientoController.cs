@@ -28,7 +28,7 @@ namespace RedExas.api.Controllers
 
         [HttpPost("create")]
         [Authorize]
-        public async Task<IActionResult> createEmprendimiento([FromForm] CreateEmprendimientoRequest request)
+        public async Task<IActionResult> createEmprendimiento([FromForm] CreateEmprendimientoDTO request)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -51,18 +51,7 @@ namespace RedExas.api.Controllers
             };
     
 
-            var createEmprendimientoDTO = new CreateEmprendimientoDTO
-            {
-                Nombre = request.Nombre,
-                Departamento = request.Departamento,
-                Descripcion = request.Descripcion,
-                Direccion = request.Direccion,
-                Imagen = imagenPath,
-                Disponibilidad = request.Disponibilidad,
-                EstudioId = request.EstudioId,
-            };
-
-            EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(createEmprendimientoDTO, userId);
+            EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(request, userId);
             return Ok(e);
         }
 

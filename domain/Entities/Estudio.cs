@@ -10,6 +10,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; private set; }
         public string Titulo { get; private set; } = string.Empty;
+        public string Color { get; private set; }
 
         public ICollection<ExAlumno> ExAlumnos { get; private set; } = new List<ExAlumno>();
         public ICollection<OfertaLaboral> OfertasLaborales { get; set; } = new List<OfertaLaboral>();

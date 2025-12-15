@@ -45,5 +45,7 @@ artifacts/
 *.mdf
 *.ldf
 
+/redExas.api/wwwroot/Uploads/
+
 # Config locales 
 appsettings.Development.json
