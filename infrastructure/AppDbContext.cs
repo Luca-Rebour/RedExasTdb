@@ -46,11 +46,6 @@ namespace Infrastructure
                 b.Property(u => u.Contrasena).IsRequired().HasMaxLength(255);
 
                 b.HasIndex(u => u.Email).IsUnique();
-
-                b.HasOne(e => e.Direccion)
-                 .WithOne()
-                 .HasForeignKey<Usuario>(e => e.DireccionId)
-                 .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Direccion>(b =>

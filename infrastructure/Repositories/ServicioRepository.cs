@@ -17,12 +17,14 @@ namespace Infrastructure.Repositories
         { 
             _context = context;
         }
-        public Task<Servicio> CreateServicio(ServicioDTO servicio)
+        public async Task<Servicio> CreateServicio(Servicio servicio)
         {
-            throw new NotImplementedException();
+            _context.Add(servicio);
+            await _context.SaveChangesAsync();
+            return servicio;
         }
 
-        public async Task<List<Servicio>> GetAllServicios(Guid IdExAlumno)
+        public async Task<List<Servicio>> GetAllServiciosExAlumno(Guid IdExAlumno)
         {
             return await _context.Servicios
                 .Include(s => s.Emprendimiento)

@@ -15,6 +15,7 @@ namespace Application.MappingProfiles
         public ServicioProfile()
         {
             CreateMap<Servicio, ServicioDTO>();
+            CreateMap<CreateServicioDTO, Servicio>();
 
         }
     }

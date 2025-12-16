@@ -23,6 +23,8 @@ using Application.UseCases.Empresas;
 using Application.Interfaces.UseCases.Empresas;
 using Application.Interfaces.UseCases.Servicios;
 using Application.UseCases.Servicios;
+using Application.Interfaces.UseCases.Portfolios;
+using Application.UseCases.Portfolios;
 
 namespace redExas.api
 {
@@ -129,6 +131,8 @@ namespace redExas.api
                 cfg.AddProfile <DisponibilidadProfile>();
                 cfg.AddProfile <EstudioProfile>();
                 cfg.AddProfile <ServicioProfile>();
+                cfg.AddProfile <PortfolioProfile>();
+                cfg.AddProfile <DireccionProfile>();
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
@@ -142,6 +146,7 @@ namespace redExas.api
             builder.Services.AddScoped<IExAlumnoRepository, ExAlumnoRepository>();
             builder.Services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
+            builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
@@ -161,8 +166,12 @@ namespace redExas.api
 
             // Inyeccion de dependencias UseCases de Servicios
             builder.Services.AddScoped<IGetServiciosDeExAlumno, GetServiciosDeExAlumno>();
+            builder.Services.AddScoped<ICreateServicio, CreateServicio>();
 
-            // Inyeccion de dependencias UseCases de Servicios
+            // Inyeccion de dependencias UseCases de Portfolio
+            builder.Services.AddScoped<ICreatePortfolio, CreatePortfolio>();            
+
+            // Inyeccion de dependencias JWT
             builder.Services.AddScoped<IJwtService, JwtService>();
 
             var app = builder.Build();

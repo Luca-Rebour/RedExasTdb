@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class Portfolio
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public string Titulo { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
         public DateOnly Fecha { get; private set; }

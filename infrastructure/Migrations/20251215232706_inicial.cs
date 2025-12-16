@@ -20,7 +20,7 @@ namespace Infrastructure.Migrations
                     Esquina = table.Column<string>(type: "text", nullable: false),
                     NumeroPuerta = table.Column<string>(type: "text", nullable: false),
                     Barrio = table.Column<string>(type: "text", nullable: false),
-                    Ciudad = table.Column<string>(type: "text", nullable: false)
+                    Departamento = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,8 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Titulo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    Titulo = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Color = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,18 +47,11 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Contrasena = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    DireccionId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Contrasena = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Direccion_DireccionId",
-                        column: x => x.DireccionId,
-                        principalTable: "Direccion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,7 +192,6 @@ namespace Infrastructure.Migrations
                     Nombre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     Imagen = table.Column<string>(type: "text", nullable: false),
-                    Departamento = table.Column<string>(type: "text", nullable: false),
                     EstudioId = table.Column<Guid>(type: "uuid", nullable: false),
                     ExAlumnoId = table.Column<Guid>(type: "uuid", nullable: false),
                     DireccionId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -509,12 +502,6 @@ namespace Infrastructure.Migrations
                 column: "EmprendimientoId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_DireccionId",
-                table: "Usuarios",
-                column: "DireccionId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",
                 table: "Usuarios",
                 column: "Email",
@@ -567,6 +554,9 @@ namespace Infrastructure.Migrations
                 name: "Empresas");
 
             migrationBuilder.DropTable(
+                name: "Direccion");
+
+            migrationBuilder.DropTable(
                 name: "Estudios");
 
             migrationBuilder.DropTable(
@@ -574,9 +564,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
-
-            migrationBuilder.DropTable(
-                name: "Direccion");
         }
     }
 }

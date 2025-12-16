@@ -14,7 +14,9 @@ namespace Application.MappingProfiles
     {
         public EmprendimientoProfile()
         {
-            CreateMap<CreateEmprendimientoDTO, Emprendimiento>();
+            CreateMap<CreateEmprendimientoDTO, Emprendimiento>()
+                .ForMember(e => e.Imagen, o => o.MapFrom(s => s.LogoUrl));
+
             CreateMap<Emprendimiento, EmprendimientoDTO>();
         }
     }

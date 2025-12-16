@@ -10,7 +10,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IServicioRepository
     {
-        Task<List<Servicio>> GetAllServicios(Guid IdExAlumno);
-        Task<Servicio> CreateServicio(ServicioDTO servicio);
+        Task<List<Servicio>> GetAllServiciosExAlumno(Guid IdExAlumno);
+        Task<Servicio> CreateServicio(Servicio servicio);
     }
 }

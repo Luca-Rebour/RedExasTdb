@@ -84,7 +84,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Ciudad")
+                    b.Property<string>("Departamento")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -154,10 +154,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Departamento")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -198,6 +194,10 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -415,9 +415,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<Guid>("DireccionId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -429,9 +426,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DireccionId")
-                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -657,17 +651,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Emprendimiento");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Usuario", b =>
-                {
-                    b.HasOne("Domain.Entities.Direccion", "Direccion")
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Usuario", "DireccionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Direccion");
                 });
 
             modelBuilder.Entity("EstudioExAlumno", b =>

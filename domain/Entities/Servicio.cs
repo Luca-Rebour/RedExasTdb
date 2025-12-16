@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class Servicio
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
         public string IconName { get; private set; } = string.Empty;

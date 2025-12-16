@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Disponibilidad;
 using Application.DTOs.Emprendimiento;
 using Application.DTOs.ExAlumnos;
+using Application.DTOs.Portfolio;
 using Application.Interfaces.UseCases.Emprendimientos;
 using Application.UseCases.Emprendimientos;
 using Domain.Entities;
@@ -33,6 +34,8 @@ namespace RedExas.api.Controllers
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             string imagenPath = string.Empty;
+            
+            
 
             if (request.Logo is not null && request.Logo.Length > 0)
             {
@@ -47,11 +50,29 @@ namespace RedExas.api.Controllers
                     await request.Logo.CopyToAsync(stream);
                 }
 
-                imagenPath = $"/Uploads/Emprendimientos/Logos/{fileName}";
+                request.LogoUrl = $"/Uploads/Emprendimientos/Logos/{fileName}";
             };
-    
+
+            foreach (CreatePortfolioDTO p in request.PortfoliosDTO)
+            {
+                if (p.Imagen is null || p.Imagen.Length == 0)
+                    continue;
+
+                var uploadsFolder = Path.Combine("wwwroot", "Uploads", "Portfolios", "Images");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(p.Imagen.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await p.Imagen.CopyToAsync(stream);
+
+                p.ImagenUrl = $"/Uploads/Portfolios/Images/{fileName}";
+            }
+
 
             EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(request, userId);
+
             return Ok(e);
         }
 

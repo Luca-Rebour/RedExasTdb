@@ -9,7 +9,6 @@ namespace Application.DTOs.Disponibilidad
 {
     public class CreateDisponibilidadDiaDTO
     {
-        public Guid DisponibilidadId { get; set; }
         public DiaSemana Dia { get; set; }
     }
 }

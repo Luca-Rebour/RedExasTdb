@@ -11,21 +11,22 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Servicios
 {
-    public class GetServiciosDeExAlumno : IGetServiciosDeExAlumno
+    public class CreateServicio : ICreateServicio
     {
         private readonly IServicioRepository _servicioRepository;
         private readonly IMapper _mapper;
 
-        public GetServiciosDeExAlumno(IServicioRepository servicioRepository, IMapper mapper)
+        public CreateServicio(IServicioRepository servicioRepository, IMapper mapper)
         {
             _servicioRepository = servicioRepository;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<ServicioDTO>> ExecuteAsync(Guid ExAlumnoId)
+        public async Task<ServicioDTO> ExecuteAsync(CreateServicioDTO createServicioDTO)
         {
-            IEnumerable<Servicio> servicios = await _servicioRepository.GetAllServiciosExAlumno(ExAlumnoId);
-            IEnumerable<ServicioDTO> serviciosDTO = _mapper.Map<List<ServicioDTO>>(servicios);
-            return serviciosDTO;
+            createServicioDTO.Validate();
+            Servicio nuevoServicio = _mapper.Map<Servicio>(createServicioDTO);
+            await _servicioRepository.CreateServicio(nuevoServicio);
+            return _mapper.Map<ServicioDTO>(nuevoServicio);
         }
     }
 }

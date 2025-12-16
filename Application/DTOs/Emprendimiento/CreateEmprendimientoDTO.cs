@@ -1,4 +1,7 @@
-﻿using Application.DTOs.Disponibilidad;
+﻿using Application.DTOs.Direccion;
+using Application.DTOs.Disponibilidad;
+using Application.DTOs.Portfolio;
+using Application.DTOs.Servicio;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,14 +15,16 @@ namespace Application.DTOs.Emprendimiento
     public class CreateEmprendimientoDTO
     {
         public string Nombre { get; set; } = string.Empty;
-        public string Imagen { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
         public Guid? EstudioId { get; set; }
         public CreateDisponibilidadDTO Disponibilidad { get; set; }
-        public Direccion? Direccion { get; set; }
+        public CreateDireccionDTO? Direccion { get; set; }
         public IFormFile? Logo { get; set; }
+        public string? LogoUrl { get; set; }
+        public List<CreatePortfolioDTO>? PortfoliosDTO { get; set; }
+        public List<CreateServicioDTO>? ServiciosDTO { get; set; }
 
-        public void validate()
+        public void Validate()
         {
             if (String.IsNullOrEmpty(Nombre))
             {

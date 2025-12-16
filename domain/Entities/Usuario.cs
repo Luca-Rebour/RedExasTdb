@@ -12,7 +12,5 @@ namespace Domain.Entities
         public string Nombre { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
         public string Contrasena { get; private set; } = string.Empty;
-        public Guid DireccionId { get; set; }
-        public Direccion Direccion { get; private set; } 
     }
 }
