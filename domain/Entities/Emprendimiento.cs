@@ -22,13 +22,24 @@ namespace Domain.Entities
         public Guid ExAlumnoId { get; private set; }
         public ExAlumno? ExAlumno { get; private set; }
 
-        public IEnumerable<Servicio> servicios { get; private set; } = new List<Servicio>();
+        public List<Servicio> Servicios { get; private set; } = new List<Servicio>();
         public Guid DireccionId { get; private set; }
         public Direccion Direccion { get; private set; }
+        public List<Portfolio> Portfolios { get; private set; } = new List<Portfolio>();
 
         public void setExAlumnoId(Guid exAlumnoId)
         {
             ExAlumnoId = exAlumnoId;
+        }
+
+        public void AddPortfolio(Portfolio p)
+        {
+            Portfolios.Add(p);
+        }
+
+        public void AddServicio(Servicio s)
+        {
+            Servicios.Add(s);
         }
 
     }

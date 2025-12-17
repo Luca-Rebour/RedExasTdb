@@ -53,22 +53,26 @@ namespace RedExas.api.Controllers
                 request.LogoUrl = $"/Uploads/Emprendimientos/Logos/{fileName}";
             };
 
-            foreach (CreatePortfolioDTO p in request.PortfoliosDTO)
+            if (request.PortfoliosDTO != null)
             {
-                if (p.Imagen is null || p.Imagen.Length == 0)
-                    continue;
+                foreach (CreatePortfolioDTO p in request.PortfoliosDTO)
+                {
+                    if (p.Imagen is null || p.Imagen.Length == 0)
+                        continue;
 
-                var uploadsFolder = Path.Combine("wwwroot", "Uploads", "Portfolios", "Images");
-                Directory.CreateDirectory(uploadsFolder);
+                    var uploadsFolder = Path.Combine("wwwroot", "Uploads", "Portfolios", "Images");
+                    Directory.CreateDirectory(uploadsFolder);
 
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(p.Imagen.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(p.Imagen.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
 
-                using var stream = new FileStream(filePath, FileMode.Create);
-                await p.Imagen.CopyToAsync(stream);
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await p.Imagen.CopyToAsync(stream);
 
-                p.ImagenUrl = $"/Uploads/Portfolios/Images/{fileName}";
+                    p.ImagenUrl = $"/Uploads/Portfolios/Images/{fileName}";
+                }
             }
+            
 
 
             EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(request, userId);

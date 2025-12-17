@@ -16,11 +16,19 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<Portfolio> CreatePortfolio(Portfolio portfolio)
+        public async Task<Portfolio> CreatePortfolio(Portfolio portfolio) // CREA EL PORTFOLIO Y LO GUARDA
         {
              _context.Portfolios.Add(portfolio);
             await _context.SaveChangesAsync();
             return portfolio;
         }
+
+
+        public Portfolio AddPortfolio(Portfolio portfolio) // CREA EL PORTFOLIO PERO NO LO GUARDA
+        {
+            _context.Portfolios.Add(portfolio);
+            return portfolio;
+        }
+
     }
 }

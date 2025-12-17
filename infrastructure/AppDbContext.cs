@@ -184,10 +184,14 @@ namespace Infrastructure
                         .HasForeignKey(a => a.ExAlumnoId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-                builder.HasMany(a => a.servicios)
+                builder.HasMany(a => a.Servicios)
                         .WithOne()
                         .OnDelete(DeleteBehavior.Cascade);
-                
+
+                builder.HasMany(a => a.Portfolios)
+                    .WithOne()
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 builder.HasOne(a => a.Direccion)
                  .WithOne()
                  .HasForeignKey<Emprendimiento>(a => a.DireccionId)

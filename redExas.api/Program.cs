@@ -39,7 +39,9 @@ namespace redExas.api
             // ESTO PERMITE USAR JWT EN SWAGGER, NO NECESARIO EN PRODUCCION
             builder.Services.AddSwaggerGen(c =>
             {
+
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fintor", Version = "v1" });
+
 
                 // ?? Configurar soporte para JWT
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -67,6 +69,7 @@ namespace redExas.api
         }
     });
             });
+
 
 
 
@@ -167,6 +170,7 @@ namespace redExas.api
             // Inyeccion de dependencias UseCases de Servicios
             builder.Services.AddScoped<IGetServiciosDeExAlumno, GetServiciosDeExAlumno>();
             builder.Services.AddScoped<ICreateServicio, CreateServicio>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Inyeccion de dependencias UseCases de Portfolio
             builder.Services.AddScoped<ICreatePortfolio, CreatePortfolio>();            
@@ -179,14 +183,20 @@ namespace redExas.api
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseStaticFiles();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
+                    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            
 
             app.MapControllers();
 

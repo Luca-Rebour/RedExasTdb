@@ -10,7 +10,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IEmprendimientoRepository
     {
-        Task<Emprendimiento> CreateEmprendimientoAsync(Emprendimiento emprendimiento);
+        void CreateEmprendimiento(Emprendimiento emprendimiento);
         Task<List<Emprendimiento>> GetAllEmprendimientosAsync();
         Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId);
         Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string? query, Guid? estudioId);

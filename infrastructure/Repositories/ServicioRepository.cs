@@ -17,10 +17,16 @@ namespace Infrastructure.Repositories
         { 
             _context = context;
         }
-        public async Task<Servicio> CreateServicio(Servicio servicio)
+        public async Task<Servicio> CreateServicio(Servicio servicio) // CREA EL SERVICIO Y LO GUARDA
         {
             _context.Add(servicio);
             await _context.SaveChangesAsync();
+            return servicio;
+        }
+
+        public Servicio AddServicio(Servicio servicio) // CREA EL SERVICIO PERO NO LO GUARDA
+        {
+            _context.Add(servicio);
             return servicio;
         }
 

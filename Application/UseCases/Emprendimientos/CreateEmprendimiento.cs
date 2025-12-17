@@ -20,51 +20,77 @@ namespace Application.UseCases.Emprendimientos
 {
     public class CreateEmprendimiento : ICreateEmprendimiento
     {
-        private readonly IEmprendimientoRepository _emprendimientoRepository;
-        private readonly IMapper _mapper;
+        private readonly IEmprendimientoRepository _empRepo;
         private readonly ICreatePortfolio _createPortfolio;
         private readonly ICreateServicio _createServicio;
+        private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        public CreateEmprendimiento(IEmprendimientoRepository emprendimientoRepository, IMapper mapper, ICreatePortfolio createPortfolio, ICreateServicio createServicio)
+        public CreateEmprendimiento(
+            IEmprendimientoRepository empRepo,
+            IMapper mapper,
+            ICreatePortfolio createPortfolio,
+            ICreateServicio createServicio,
+            IUnitOfWork uow)
         {
-            _emprendimientoRepository = emprendimientoRepository;
+            _empRepo = empRepo;
             _mapper = mapper;
             _createPortfolio = createPortfolio;
             _createServicio = createServicio;
+            _uow = uow;
         }
 
-        public async Task<EmprendimientoDTO> ExecuteAsync(CreateEmprendimientoDTO emprendimientoDTO, Guid userId)
+        public async Task<EmprendimientoDTO> ExecuteAsync(CreateEmprendimientoDTO dto, Guid userId)
         {
+            dto.Validate();
 
-            emprendimientoDTO.Validate();
-            Emprendimiento emprendimiento = _mapper.Map<Emprendimiento>(emprendimientoDTO);
-            emprendimiento.Disponibilidad.setEmprendimientoId(emprendimiento.Id);
-
-            emprendimiento.setExAlumnoId(userId);
-
-            foreach (DisponibilidadDia disponibilidadDia in emprendimiento.Disponibilidad.Dias)
+            await _uow.BeginTransactionAsync();
+            try
             {
-                disponibilidadDia.setDispoinibilidadId(emprendimiento.Disponibilidad.Id);
+                Emprendimiento emp = _mapper.Map<Emprendimiento>(dto);
+                emp.setExAlumnoId(userId);
+
+
+                _empRepo.CreateEmprendimiento(emp);
+
+                if (dto.PortfoliosDTO != null)
+                {
+                    foreach (CreatePortfolioDTO p in dto.PortfoliosDTO)
+                    {
+                        p.EmprendimientoId = emp.Id;
+                        emp.AddPortfolio(_mapper.Map<Portfolio>(p));
+                    }
+                }
+
+                if (dto.ServiciosDTO != null)
+                {
+                    foreach (CreateServicioDTO s in dto.ServiciosDTO)
+                    {
+                        s.EmprendimientoId = emp.Id;
+                        emp.AddServicio(_mapper.Map<Servicio>(s));
+                    }
+                }
+
+                if (emp.Disponibilidad != null)
+                {
+                    emp.Disponibilidad.setEmprendimientoId(emp.Id);
+
+                    foreach (var dia in emp.Disponibilidad.Dias)
+                        dia.setDispoinibilidadId(emp.Disponibilidad.Id);
+                }
+
+
+                await _uow.SaveChangesAsync();  // GUARDA TODOS LOS CAMBIOS REALIZADOS EN ESTE METODO
+                await _uow.CommitAsync();
+
+                return _mapper.Map<EmprendimientoDTO>(emp);
             }
-
-
-
-            emprendimiento = await _emprendimientoRepository.CreateEmprendimientoAsync(emprendimiento);
-            EmprendimientoDTO emprendimientoCreadoDTO = _mapper.Map<EmprendimientoDTO>(emprendimiento);
-
-            foreach (CreatePortfolioDTO p in emprendimientoDTO.PortfoliosDTO)
+            catch
             {
-                p.EmprendimientoId = emprendimientoCreadoDTO.Id;
-                emprendimientoCreadoDTO.Portfolios.Add(_mapper.Map<PortfolioDTO>(await _createPortfolio.ExecuteAsync(p)));
+                await _uow.RollbackAsync();
+                throw;
             }
-            
-            foreach (CreateServicioDTO s in emprendimientoDTO.ServiciosDTO)
-            {
-                s.EmprendimientoId = emprendimientoCreadoDTO.Id;
-                emprendimientoCreadoDTO.Servicios.Add(_mapper.Map<ServicioDTO>(await _createServicio.ExecuteAsync(s)));
-            }
-
-            return emprendimientoCreadoDTO;
         }
     }
+
 }

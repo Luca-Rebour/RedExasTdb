@@ -9,6 +9,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IPortfolioRepository
     {
-        Task<Portfolio> CreatePortfolio(Portfolio portfolio);
+        Task<Portfolio> CreatePortfolio(Portfolio portfolio); // CREA EL PORTFOLIO Y LO GUARDA
+        Portfolio AddPortfolio(Portfolio portfolio); // CREA EL PORTFOLIO PERO NO LO GUARDA
     }
 }

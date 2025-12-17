@@ -21,25 +21,14 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<Emprendimiento> CreateEmprendimientoAsync(Emprendimiento emprendimiento)
+        public void CreateEmprendimiento(Emprendimiento emprendimiento)
         {
-            await _context.Emprendimientos.AddAsync(emprendimiento);
-            await _context.SaveChangesAsync();
-
-            await _context.Entry(emprendimiento)
-                .Reference(e => e.ExAlumno)
-                .LoadAsync();
-
-            await _context.Entry(emprendimiento)
-                .Reference(e => e.Estudio)
-                .LoadAsync();
-
-            return emprendimiento;
+            _context.Emprendimientos.Add(emprendimiento);
         }
 
         public async Task<List<Emprendimiento>> GetAllEmprendimientosAsync()
         {
-            return await _context.Emprendimientos.Include(e => e.ExAlumno).Include(d => d.Disponibilidad).Include(d => d.Disponibilidad.Dias).Include(s => s.servicios).ToListAsync();
+            return await _context.Emprendimientos.Include(e => e.ExAlumno).Include(d => d.Disponibilidad).Include(d => d.Disponibilidad.Dias).Include(s => s.Servicios).ToListAsync();
         }
 
         public async Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId)

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251215232706_inicial")]
+    [Migration("20251217014907_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -298,6 +298,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("EmprendimientoId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("EmprendimientoId1")
+                        .HasColumnType("uuid");
+
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
@@ -313,6 +316,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmprendimientoId");
+
+                    b.HasIndex("EmprendimientoId1");
 
                     b.ToTable("Portfolios");
                 });
@@ -607,6 +612,10 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Emprendimiento", null)
+                        .WithMany("Portfolios")
+                        .HasForeignKey("EmprendimientoId1");
+
                     b.Navigation("Emprendimiento");
                 });
 
@@ -649,7 +658,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Emprendimiento", null)
-                        .WithMany("servicios")
+                        .WithMany("Servicios")
                         .HasForeignKey("EmprendimientoId1")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -723,7 +732,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Disponibilidad")
                         .IsRequired();
 
-                    b.Navigation("servicios");
+                    b.Navigation("Portfolios");
+
+                    b.Navigation("Servicios");
                 });
 #pragma warning restore 612, 618
         }
