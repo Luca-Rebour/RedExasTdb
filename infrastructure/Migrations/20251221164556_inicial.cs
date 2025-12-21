@@ -96,11 +96,18 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Apellido = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    AnioEgreso = table.Column<int>(type: "integer", nullable: false)
+                    AnioEgreso = table.Column<int>(type: "integer", nullable: false),
+                    DireccionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExAlumnos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExAlumnos_Direccion_DireccionId",
+                        column: x => x.DireccionId,
+                        principalTable: "Direccion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ExAlumnos_Usuarios_Id",
                         column: x => x.Id,
@@ -468,6 +475,11 @@ namespace Infrastructure.Migrations
                 column: "ExAlumnosId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExAlumnos_DireccionId",
+                table: "ExAlumnos",
+                column: "DireccionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OfertaLaboralEstudio_OfertasLaboralesId",
                 table: "OfertaLaboralEstudio",
                 column: "OfertasLaboralesId");
@@ -565,13 +577,13 @@ namespace Infrastructure.Migrations
                 name: "Empresas");
 
             migrationBuilder.DropTable(
-                name: "Direccion");
-
-            migrationBuilder.DropTable(
                 name: "Estudios");
 
             migrationBuilder.DropTable(
                 name: "ExAlumnos");
+
+            migrationBuilder.DropTable(
+                name: "Direccion");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

@@ -25,6 +25,8 @@ using Application.Interfaces.UseCases.Servicios;
 using Application.UseCases.Servicios;
 using Application.Interfaces.UseCases.Portfolios;
 using Application.UseCases.Portfolios;
+using Application.Interfaces.UseCases.Publicaciones;
+using Application.UseCases.Publicaciones;
 
 namespace redExas.api
 {
@@ -136,6 +138,7 @@ namespace redExas.api
                 cfg.AddProfile <ServicioProfile>();
                 cfg.AddProfile <PortfolioProfile>();
                 cfg.AddProfile <DireccionProfile>();
+                cfg.AddProfile <PublicacionProfile>();
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
@@ -150,6 +153,7 @@ namespace redExas.api
             builder.Services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
             builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+            builder.Services.AddScoped<IPublicacionRepository, PublicacionRepository>();
 
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
@@ -160,6 +164,7 @@ namespace redExas.api
             builder.Services.AddScoped<IGetAllEmprendimientos, GetAllEmprendimientos>();
             builder.Services.AddScoped<IGetEmprendimientosDeExAlumno, GetEmprendimientosDeExAlumno>();
             builder.Services.AddScoped<ISearchEmprendimiento, SearchEmprendimiento>();
+            builder.Services.AddScoped<IGetServiciosDeEmprendimiento, GetServiciosDeEmprendimiento>();
 
             // Inyeccion de dependencias UseCases de Usuario
             builder.Services.AddScoped<ISignIn, SignIn>();
@@ -173,7 +178,10 @@ namespace redExas.api
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Inyeccion de dependencias UseCases de Portfolio
-            builder.Services.AddScoped<ICreatePortfolio, CreatePortfolio>();            
+            builder.Services.AddScoped<ICreatePortfolio, CreatePortfolio>();
+
+            // Inyeccion de dependencias UseCases de Publicacion
+            builder.Services.AddScoped<ICreatePublicacion, CreatePublicacion>();
 
             // Inyeccion de dependencias JWT
             builder.Services.AddScoped<IJwtService, JwtService>();

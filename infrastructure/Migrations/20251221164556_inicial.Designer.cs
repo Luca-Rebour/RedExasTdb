@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251217014907_inicial")]
+    [Migration("20251221164556_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -509,6 +509,11 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<Guid>("DireccionId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("DireccionId");
+
                     b.ToTable("ExAlumnos", (string)null);
                 });
 
@@ -715,11 +720,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ExAlumno", b =>
                 {
+                    b.HasOne("Domain.Entities.Direccion", "Direccion")
+                        .WithMany()
+                        .HasForeignKey("DireccionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Usuario", null)
                         .WithOne()
                         .HasForeignKey("Domain.Entities.ExAlumno", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Direccion");
                 });
 
             modelBuilder.Entity("Domain.Entities.Disponibilidad", b =>

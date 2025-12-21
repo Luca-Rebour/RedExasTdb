@@ -2,6 +2,7 @@
 using Application.DTOs.Emprendimiento;
 using Application.DTOs.ExAlumnos;
 using Application.DTOs.Portfolio;
+using Application.DTOs.Servicio;
 using Application.Interfaces.UseCases.Emprendimientos;
 using Application.UseCases.Emprendimientos;
 using Domain.Entities;
@@ -19,12 +20,14 @@ namespace RedExas.api.Controllers
         private readonly ICreateEmprendimiento _createEmprendimiento;
         private readonly IGetAllEmprendimientos _getAllEmprendimientos;
         private readonly ISearchEmprendimiento _searchEmprendimiento;
+        private readonly IGetServiciosDeEmprendimiento _getServiciosDeEmprendimiento;
 
-        public EmprendimientoController(ICreateEmprendimiento createEmprendimiento, IGetAllEmprendimientos getAllEmprendimientos, ISearchEmprendimiento searchEmprendimiento)
+        public EmprendimientoController(ICreateEmprendimiento createEmprendimiento, IGetAllEmprendimientos getAllEmprendimientos, ISearchEmprendimiento searchEmprendimiento, IGetServiciosDeEmprendimiento getServiciosDeEmprendimiento)
         {
             _createEmprendimiento = createEmprendimiento;
             _getAllEmprendimientos = getAllEmprendimientos;
             _searchEmprendimiento = searchEmprendimiento;
+            _getServiciosDeEmprendimiento = getServiciosDeEmprendimiento;
         }
 
         [HttpPost("create")]
@@ -86,6 +89,13 @@ namespace RedExas.api.Controllers
         {
             List<EmprendimientoDTO> e = await _getAllEmprendimientos.ExecuteAsync();
             return Ok(e);
+        }
+
+        [HttpGet("servicios")]
+        public async Task<IActionResult> getAllEmprendimientos([FromQuery] Guid emprendimientoId)
+        {
+            List<ServicioDTO> s = await _getServiciosDeEmprendimiento.ExecuteAsync(emprendimientoId);
+            return Ok(s);
         }
 
         [HttpGet("search")]

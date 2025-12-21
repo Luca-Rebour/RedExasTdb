@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class Publicacion
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public string Titulo { get; private set; } = string.Empty;
         public string Texto { get; private set; } = string.Empty;
 

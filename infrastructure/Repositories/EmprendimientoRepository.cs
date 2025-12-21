@@ -36,6 +36,11 @@ namespace Infrastructure.Repositories
             return await _context.Emprendimientos.Include(e => e.ExAlumno).Where(e => e.ExAlumnoId.Equals(userId)).ToListAsync();
         }
 
+        public async Task<List<Servicio>> GetServiciosDeEmprendimiento(Guid emprendimientoId)
+        {
+            return await _context.Servicios.Include(s => s.Emprendimiento).Where(s => s.EmprendimientoId.Equals(emprendimientoId)).ToListAsync();
+        }
+
         public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(
             string? query,
             Guid? estudioId
