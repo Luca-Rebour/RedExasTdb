@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Disponibilidad;
+﻿using Application.DTOs.Direccion;
+using Application.DTOs.Disponibilidad;
 using Application.DTOs.Estudio;
 using Application.DTOs.ExAlumnos;
 using Application.DTOs.Portfolio;
@@ -18,8 +19,7 @@ namespace Application.DTOs.Emprendimiento
         public string Nombre { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
         public string Imagen { get; set; } = string.Empty;
-        public string Departamento { get; set; } = string.Empty;
-        public string Direccion { get; set; } = string.Empty;
+        public DireccionDTO Direccion { get; set; }
         public EstudioDTO? Estudio { get; set; }
         public ICollection<ServicioDTO> Servicios { get; set; } = new List<ServicioDTO>();
         public ICollection<PortfolioDTO> Portfolios { get; set; } = new List<PortfolioDTO>();

@@ -15,6 +15,7 @@ namespace Application.MappingProfiles
         public DireccionProfile()
         {
             CreateMap<CreateDireccionDTO, Direccion>();
+            CreateMap<Direccion, DireccionDTO>();
         }
     }
 }

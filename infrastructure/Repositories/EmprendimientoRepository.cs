@@ -28,7 +28,13 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Emprendimiento>> GetAllEmprendimientosAsync()
         {
-            return await _context.Emprendimientos.Include(e => e.ExAlumno).Include(d => d.Disponibilidad).Include(d => d.Disponibilidad.Dias).Include(s => s.Servicios).ToListAsync();
+            return await _context.Emprendimientos
+                .Include(e => e.ExAlumno)
+                .Include(d => d.Direccion)
+                .Include(s => s.Servicios)
+                .Include(e => e.Estudio)
+                .Include(e => e.Disponibilidad)
+                    .ThenInclude(d => d.Dias).ToListAsync();
         }
 
         public async Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId)
