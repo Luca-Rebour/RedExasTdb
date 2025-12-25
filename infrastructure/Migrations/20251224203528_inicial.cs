@@ -351,8 +351,7 @@ namespace Infrastructure.Migrations
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     IconName = table.Column<string>(type: "text", nullable: false),
                     Costo = table.Column<double>(type: "double precision", nullable: true),
-                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EmprendimientoId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -360,12 +359,6 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Servicios_Emprendimientos_EmprendimientoId",
                         column: x => x.EmprendimientoId,
-                        principalTable: "Emprendimientos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Servicios_Emprendimientos_EmprendimientoId1",
-                        column: x => x.EmprendimientoId1,
                         principalTable: "Emprendimientos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -518,11 +511,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Servicios_EmprendimientoId",
                 table: "Servicios",
                 column: "EmprendimientoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Servicios_EmprendimientoId1",
-                table: "Servicios",
-                column: "EmprendimientoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Email",

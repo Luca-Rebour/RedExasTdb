@@ -17,7 +17,11 @@ namespace Application.MappingProfiles
             CreateMap<CreatePublicacionDTO, Publicacion>();
             CreateMap<Publicacion, PublicacionDTO>();
             CreateMap<PublicacionDTO, Publicacion>();
+            CreateMap<EditarPublicacionDTO, Publicacion>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, srcMember) => srcMember != null));
+
         }
-        
+
     }
 }

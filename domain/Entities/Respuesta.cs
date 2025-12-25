@@ -18,5 +18,10 @@ namespace Domain.Entities
 
         public Guid ExAlumnoId { get; private set; }
         public ExAlumno? ExAlumno { get; private set; }
+
+        public void SetExAlumnoId(Guid exAlumnoId)
+        {
+            ExAlumnoId = exAlumnoId;
+        }
     }
 }

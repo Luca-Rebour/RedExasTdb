@@ -10,5 +10,8 @@ namespace Application.Interfaces.Repositories
     public interface IPublicacionRepository
     {
         void CreatePublicacion(Publicacion publicacion);
+        void UpdatePublicacion(Publicacion publicacion);
+        void DeletePublicacion(Publicacion publicacion);
+        Task<Publicacion> GetPublicacionAsync(Guid publicacionId);
     }
 }
