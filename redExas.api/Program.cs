@@ -191,6 +191,7 @@ namespace redExas.api
             
             // Inyeccion de dependencias UseCases de Respuesta
             builder.Services.AddScoped<ICreateRespuesta, CreateRespuesta>();
+            builder.Services.AddScoped<IDeleteRespuesta, DeleteRespuesta>();
 
             // Inyeccion de dependencias JWT
             builder.Services.AddScoped<IJwtService, JwtService>();

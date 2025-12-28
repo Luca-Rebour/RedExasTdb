@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
 {
     public class ServicioRepository : IServicioRepository
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
         public ServicioRepository(AppDbContext context) 
         { 
             _context = context;

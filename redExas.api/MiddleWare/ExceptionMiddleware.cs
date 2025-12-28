@@ -42,6 +42,7 @@ namespace Api.Middlewares
                 EmailAlreadyExistsException => StatusCodes.Status409Conflict,
                 ArgumentOutOfRangeException => StatusCodes.Status400BadRequest,
                 FormatException => StatusCodes.Status400BadRequest,
+                NotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError
             };
 

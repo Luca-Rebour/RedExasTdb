@@ -12,20 +12,31 @@ namespace RedExas.api.Controllers
     public class RespuestaController : Controller
     {
         private ICreateRespuesta _createRespuesta;
+        private IDeleteRespuesta _deleteRespuesta;
 
-        public RespuestaController(ICreateRespuesta createRespuesta)
+        public RespuestaController(ICreateRespuesta createRespuesta, IDeleteRespuesta deleteRespuesta)
         {
             _createRespuesta = createRespuesta;
+            _deleteRespuesta = deleteRespuesta;
         }
 
         [HttpPost("create")]
         [Authorize]
-        public async Task<IActionResult> createPublicacion([FromBody] CreateRespuestaDTO createRespuestaDTO)
+        public async Task<IActionResult> createRespuesta([FromBody] CreateRespuestaDTO createRespuestaDTO)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             RespuestaDTO respuestaDTO = await _createRespuesta.ExecuteAsync(createRespuestaDTO, userId);
 
             return Ok(respuestaDTO);
+        }
+
+        [HttpDelete("delete/{respuestaId:Guid}")]
+        [Authorize]
+        public async Task<IActionResult> createRespuesta([FromRoute] Guid respuestaId)
+        {
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await _deleteRespuesta.ExecuteAsync(respuestaId, userId);
+            return Ok();
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Application.Interfaces.Repositories
     public interface IRespuestaRepository
     {
         void CreateRespuesta(Respuesta respuesta);
+        Task<Respuesta> GetRespuestaAsync(Guid respuestaId);
+        void DeleteRespuesta(Respuesta respuesta);
     }
 }
