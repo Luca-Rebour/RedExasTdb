@@ -1,4 +1,4 @@
-﻿using Application.DTOs.ExAlumnos;
+﻿using Application.DTOs.ExAlumno;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -15,6 +15,7 @@ namespace Application.MappingProfiles
         {
             CreateMap<CreateExAlumnoDTO, ExAlumno>();
             CreateMap<ExAlumno, ExAlumnoDTO>();
+            CreateMap<ExAlumno, ExAlumnoDetailDTO>();
         }   
     }
 }

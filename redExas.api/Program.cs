@@ -44,7 +44,7 @@ namespace redExas.api
             builder.Services.AddSwaggerGen(c =>
             {
 
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fintor", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RedExas", Version = "v1" });
 
 
                 // ?? Configurar soporte para JWT
@@ -162,6 +162,7 @@ namespace redExas.api
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
             builder.Services.AddScoped<IGetAllExAlumnos, GetAllExAlumnos>();
+            builder.Services.AddScoped<IGetExAlumnoById, GetExAlumnoById>();
 
             // Inyeccion de dependencias UseCases de Emprendimiento
             builder.Services.AddScoped<ICreateEmprendimiento, CreateEmprendimiento>();
@@ -169,17 +170,22 @@ namespace redExas.api
             builder.Services.AddScoped<IGetEmprendimientosDeExAlumno, GetEmprendimientosDeExAlumno>();
             builder.Services.AddScoped<ISearchEmprendimiento, SearchEmprendimiento>();
             builder.Services.AddScoped<IGetServiciosDeEmprendimiento, GetServiciosDeEmprendimiento>();
+            builder.Services.AddScoped<IGetEmprendimientoById, GetEmprendimientoById>();
+
+            
 
             // Inyeccion de dependencias UseCases de Usuario
             builder.Services.AddScoped<ISignIn, SignIn>();
 
             // Inyeccion de dependencias UseCases de Empresas
             builder.Services.AddScoped<ICreateEmpresa, CreateEmpresa>();
+            builder.Services.AddScoped<IGetEmpresaById, GetEmpresaById>();
 
             // Inyeccion de dependencias UseCases de Servicios
             builder.Services.AddScoped<IGetServiciosDeExAlumno, GetServiciosDeExAlumno>();
             builder.Services.AddScoped<ICreateServicio, CreateServicio>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IGetServicioById, GetServicioById>();
 
             // Inyeccion de dependencias UseCases de Portfolio
             builder.Services.AddScoped<ICreatePortfolio, CreatePortfolio>();
@@ -188,10 +194,12 @@ namespace redExas.api
             builder.Services.AddScoped<ICreatePublicacion, CreatePublicacion>();
             builder.Services.AddScoped<IEditarPublicacion, EditarPublicacion>();
             builder.Services.AddScoped<IEliminarPublicacion, EliminarPublicacion>();
+            builder.Services.AddScoped<IGetPublicacionById, GetPublicacionById>();
             
             // Inyeccion de dependencias UseCases de Respuesta
             builder.Services.AddScoped<ICreateRespuesta, CreateRespuesta>();
             builder.Services.AddScoped<IDeleteRespuesta, DeleteRespuesta>();
+            builder.Services.AddScoped<IGetRespuestaById, GetRespuestaById>();
 
             // Inyeccion de dependencias JWT
             builder.Services.AddScoped<IJwtService, JwtService>();

@@ -567,7 +567,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ExAlumno", "ExAlumno")
-                        .WithMany()
+                        .WithMany("Emprendimientos")
                         .HasForeignKey("ExAlumnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -735,6 +735,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Portfolios");
 
                     b.Navigation("Servicios");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExAlumno", b =>
+                {
+                    b.Navigation("Emprendimientos");
                 });
 #pragma warning restore 612, 618
         }

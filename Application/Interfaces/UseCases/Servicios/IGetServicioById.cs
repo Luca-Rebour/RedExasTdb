@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.UseCases.Servicios
 {
-    public interface ICreateServicio
+    public interface IGetServicioById
     {
-        Task<ServicioDTO> ExecuteAsync(CreateServicioDTO createServicioDTO, Guid emprendimientoId);
+        Task<ServicioDTO> ExecuteAsync(Guid servicioId);
     }
 }

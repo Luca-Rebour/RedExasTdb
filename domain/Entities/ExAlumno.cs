@@ -10,10 +10,10 @@ namespace Domain.Entities
     {
         public string Apellido { get; private set; } = string.Empty;
         public int AnioEgreso { get; private set; }
-
-        public ICollection<Estudio> Estudios { get; private set; } = new List<Estudio>();
         public Guid DireccionId { get; private set; }
         public Direccion Direccion { get; private set; }
+        public ICollection<Estudio> Estudios { get; private set; } = new List<Estudio>();
+        public ICollection<Emprendimiento> Emprendimientos { get; private set; } = new List<Emprendimiento>();
 
     }
 }

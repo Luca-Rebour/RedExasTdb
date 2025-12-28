@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.Servicio
+namespace Application.DTOs.Emprendimiento
 {
-    public class ServicioDTO
+    public class EmprendimientoSummaryDTO
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
+        public string Imagen { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
-        public double? Costo { get; set; }
-        public string IconName { get; set; }
     }
 }

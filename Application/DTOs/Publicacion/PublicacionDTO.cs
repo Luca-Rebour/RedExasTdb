@@ -1,4 +1,4 @@
-﻿using Application.DTOs.ExAlumnos;
+﻿using Application.DTOs.ExAlumno;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;

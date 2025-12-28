@@ -80,8 +80,6 @@ namespace Infrastructure
                 builder.HasMany(a => a.Estudios)
                     .WithMany(e => e.ExAlumnos)
                     .UsingEntity(j => j.ToTable("ExAlumnoEstudio"));
-
-
             });
 
             modelBuilder.Entity<Empresa>(builder =>
@@ -198,6 +196,12 @@ namespace Infrastructure
                  .WithOne()
                  .HasForeignKey<Emprendimiento>(a => a.DireccionId)
                  .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasOne(e => e.ExAlumno)
+                   .WithMany(x => x.Emprendimientos)
+                   .HasForeignKey(e => e.ExAlumnoId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
 
             });
 

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.UseCases.Emprendimientos
 {
-    public interface ISearchEmprendimiento
+    public interface IGetEmprendimientoById
     {
-        Task<List<EmprendimientoDTO>> ExecuteAsync(SearchEmprendimientoQuery query);
+        Task<EmprendimientoDTO> ExecuteAsync(Guid emprendimientoId);
     }
 }

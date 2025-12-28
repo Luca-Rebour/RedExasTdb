@@ -1,4 +1,4 @@
-﻿using Application.DTOs.ExAlumnos;
+﻿using Application.DTOs.ExAlumno;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Interfaces.UseCases.ExAlumnos;
@@ -28,7 +28,7 @@ namespace Application.UseCases.ExAlumnos
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<ExAlumno> ExecuteAsync(CreateExAlumnoDTO exAlumnoDTO)
+        public async Task<ExAlumnoDTO> ExecuteAsync(CreateExAlumnoDTO exAlumnoDTO)
         {
             if (await _usuarioRepository.ExisteEmailAsync(exAlumnoDTO.Email))
             {
@@ -38,7 +38,7 @@ namespace Application.UseCases.ExAlumnos
             exAlumnoDTO.Contrasena = _passwordService.HashPassword(exAlumnoDTO.Contrasena);
             ExAlumno exAlumno = _mapper.Map<ExAlumno>(exAlumnoDTO);
             await _exAlumnoRepository.CreateExAlumnoAsync(exAlumno);
-            return exAlumno;
+            return _mapper.Map<ExAlumnoDTO>(exAlumno);
         }
     }
 }

@@ -29,5 +29,9 @@ namespace Infrastructure.Repositories
         {
             return await _context.ExAlumnos.ToListAsync();
         }
+        public async Task<ExAlumno> GetAllExAlumnoAsync(Guid exAlumnoId)
+        {
+            return await _context.ExAlumnos.FirstOrDefaultAsync(e => e.Id.Equals(exAlumnoId));
+        }
     }
 }

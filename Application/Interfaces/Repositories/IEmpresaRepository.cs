@@ -10,5 +10,6 @@ namespace Application.Interfaces.Repositories
     public interface IEmpresaRepository
     {
         Task<Empresa> CreateEmpresaAsync(Empresa empresa);
+        Task<Empresa> getEmpresaByIdAsync(Guid empresaId);
     }
 }

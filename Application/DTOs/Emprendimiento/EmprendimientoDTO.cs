@@ -1,7 +1,7 @@
 ﻿using Application.DTOs.Direccion;
 using Application.DTOs.Disponibilidad;
 using Application.DTOs.Estudio;
-using Application.DTOs.ExAlumnos;
+using Application.DTOs.ExAlumno;
 using Application.DTOs.Portfolio;
 using Application.DTOs.Servicio;
 using Domain.Entities;
@@ -23,7 +23,7 @@ namespace Application.DTOs.Emprendimiento
         public EstudioDTO? Estudio { get; set; }
         public ICollection<ServicioDTO> Servicios { get; set; } = new List<ServicioDTO>();
         public ICollection<PortfolioDTO> Portfolios { get; set; } = new List<PortfolioDTO>();
-        public DisponibilidadDTO Disponibilidad { get; set; }
+        public DisponibilidadDTO? Disponibilidad { get; set; }
         public ExAlumnoDTO? ExAlumno { get; set; }
     }
 }

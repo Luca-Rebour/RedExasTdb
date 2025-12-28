@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,12 @@ namespace Infrastructure.Repositories
         public async Task<Empresa> CreateEmpresaAsync(Empresa empresa)
         {
             await _context.Empresas.AddAsync(empresa);
-            await _context.SaveChangesAsync();
             return empresa;
+        }
+
+        public async Task<Empresa> getEmpresaByIdAsync(Guid empresaId)
+        {
+            return await _context.Empresas.FirstOrDefaultAsync(e => e.Id.Equals(empresaId));
         }
     }
 }

@@ -17,5 +17,10 @@ namespace Domain.Entities
 
         public Guid EmprendimientoId { get; private set; }
         public Emprendimiento? Emprendimiento { get; private set; }
+
+        public void setEmprendimientoId(Guid emprendimientoId)
+        {
+            EmprendimientoId = emprendimientoId;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.Emprendimiento;
 using Application.DTOs.Estudio;
-using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.ExAlumno
 {
-    public class ExAlumnoDTO
+    public class ExAlumnoDetailDTO
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }
@@ -17,5 +16,6 @@ namespace Application.DTOs.ExAlumno
         public int AnioEgreso { get; set; }
 
         public ICollection<EstudioDTO> Estudios { get; set; } = new List<EstudioDTO>();
+        public ICollection<EmprendimientoSummaryDTO> Emprendimientos { get; set; } = new List<EmprendimientoSummaryDTO>();
     }
 }

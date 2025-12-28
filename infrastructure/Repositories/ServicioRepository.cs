@@ -37,5 +37,10 @@ namespace Infrastructure.Repositories
                 .Where(s => s.Emprendimiento.ExAlumnoId == IdExAlumno).ToListAsync();
 
         }
+
+        public async Task<Servicio> GetServicioById(Guid servicioId)
+        {
+            return await _context.Servicios.FirstOrDefaultAsync(s => s.Id.Equals(servicioId));
+        }
     }
 }

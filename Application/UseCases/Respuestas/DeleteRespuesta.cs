@@ -27,6 +27,7 @@ namespace Application.UseCases.Respuestas
         public async Task<bool> ExecuteAsync(Guid respuestaId, Guid userId)
         {
             Respuesta respuestaAEliminar = await _respuestaRepository.GetRespuestaAsync(respuestaId) ?? throw new NotFoundException("Respuesta", respuestaId); ;
+            
             if (respuestaAEliminar.ExAlumnoId != userId)
             {
                 throw new UnauthorizedAccessException("No tienes aceso a eliminar esta respuesta");

@@ -1,9 +1,10 @@
 ﻿using Application.DTOs.Disponibilidad;
 using Application.DTOs.Emprendimiento;
-using Application.DTOs.ExAlumnos;
+using Application.DTOs.ExAlumno;
 using Application.DTOs.Portfolio;
 using Application.DTOs.Servicio;
 using Application.Interfaces.UseCases.Emprendimientos;
+using Application.Interfaces.UseCases.Servicios;
 using Application.UseCases.Emprendimientos;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -21,16 +22,29 @@ namespace RedExas.api.Controllers
         private readonly IGetAllEmprendimientos _getAllEmprendimientos;
         private readonly ISearchEmprendimiento _searchEmprendimiento;
         private readonly IGetServiciosDeEmprendimiento _getServiciosDeEmprendimiento;
+        private readonly ICreateServicio _createServicio;
+        private readonly IGetEmprendimientoById _getEmprendimientoById;
+        private readonly IGetServicioById _getServicioById;
 
-        public EmprendimientoController(ICreateEmprendimiento createEmprendimiento, IGetAllEmprendimientos getAllEmprendimientos, ISearchEmprendimiento searchEmprendimiento, IGetServiciosDeEmprendimiento getServiciosDeEmprendimiento)
+        public EmprendimientoController(
+            ICreateEmprendimiento createEmprendimiento, 
+            IGetAllEmprendimientos getAllEmprendimientos,
+            ISearchEmprendimiento searchEmprendimiento,
+            IGetServiciosDeEmprendimiento getServiciosDeEmprendimiento,
+            ICreateServicio createServicio,
+            IGetEmprendimientoById getEmprendimientoById,
+            IGetServicioById getServicioById)
         {
             _createEmprendimiento = createEmprendimiento;
             _getAllEmprendimientos = getAllEmprendimientos;
             _searchEmprendimiento = searchEmprendimiento;
             _getServiciosDeEmprendimiento = getServiciosDeEmprendimiento;
+            _createServicio = createServicio;
+            _getEmprendimientoById = getEmprendimientoById;
+            _getServicioById = getServicioById;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> createEmprendimiento([FromForm] CreateEmprendimientoDTO request)
         {
@@ -80,31 +94,45 @@ namespace RedExas.api.Controllers
 
             EmprendimientoDTO e = await _createEmprendimiento.ExecuteAsync(request, userId);
 
-            return Ok(e);
-        }
-
-
-        [HttpGet("all")]
-        public async Task<IActionResult> getAllEmprendimientos()
-        {
-            List<EmprendimientoDTO> e = await _getAllEmprendimientos.ExecuteAsync();
-            return Ok(e);
+            return CreatedAtAction(nameof(getEmprendimientoById), new {EmprendimientoId = e.Id}, e);
         }
 
         [HttpGet("servicios")]
-        public async Task<IActionResult> getAllEmprendimientos([FromQuery] Guid emprendimientoId)
+        public async Task<IActionResult> getAllServiciosDeEmprendimiento([FromQuery] Guid emprendimientoId)
         {
             List<ServicioDTO> s = await _getServiciosDeEmprendimiento.ExecuteAsync(emprendimientoId);
             return Ok(s);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchEmprendimiento([FromQuery] string? query, [FromQuery] Guid? estudioId)
+        [HttpGet]
+        public async Task<IActionResult> searchEmprendimiento([FromQuery] SearchEmprendimientoQuery query)
         {
-            var e = await _searchEmprendimiento.ExecuteAsync(query, estudioId);
+            var e = await _searchEmprendimiento.ExecuteAsync(query);
             return Ok(e);
         }
 
+        [HttpPost("{emprendimientoId:guid}/servicios")]
+        [Authorize]
+        public async Task<IActionResult> createServicio([FromBody] CreateServicioDTO createServicioDTO, [FromRoute] Guid emprendimientoId)
+        {
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
+            ServicioDTO servicioDTO = await _createServicio.ExecuteAsync(createServicioDTO, emprendimientoId);
+            return CreatedAtAction(nameof(getServicioById), new { ServicioId = servicioDTO.Id }, servicioDTO);
+        }
+
+        [HttpGet("{emprendimientoId:guid}")]
+        public async Task<IActionResult> getEmprendimientoById([FromRoute] Guid emprendimientoId)
+        {
+            EmprendimientoDTO emprendimientoDTO = await _getEmprendimientoById.ExecuteAsync(emprendimientoId);
+            return Ok(emprendimientoDTO);
+        }
+
+        [HttpGet("{servicioId:guid}")]
+        public async Task<IActionResult> getServicioById([FromRoute] Guid servicioId)
+        {
+            ServicioDTO servicioDTO = await _getServicioById.ExecuteAsync(servicioId);
+            return Ok(servicioDTO);
+        }
     }
 }

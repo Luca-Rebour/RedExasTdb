@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Emprendimiento;
-using Application.DTOs.ExAlumnos;
+using Application.DTOs.ExAlumno;
 using Application.DTOs.Portfolio;
 using Application.DTOs.Servicio;
 using Application.Interfaces.Repositories;

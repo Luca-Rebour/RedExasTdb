@@ -1,6 +1,8 @@
-﻿using Application.DTOs.Emprendimiento;
+﻿using Application.DTOs.Direccion;
+using Application.DTOs.Emprendimiento;
 using Application.DTOs.Estudio;
-using Application.DTOs.ExAlumnos;
+using Application.DTOs.ExAlumno;
+using Application.DTOs.Portfolio;
 using Application.DTOs.Servicio;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
@@ -37,6 +39,11 @@ namespace Infrastructure.Repositories
                     .ThenInclude(d => d.Dias).ToListAsync();
         }
 
+        public async Task<Emprendimiento> GetEmprendimientoById(Guid emprendimientoId)
+        {
+            return await _context.Emprendimientos.FirstOrDefaultAsync(e => e.Id.Equals(emprendimientoId));
+        }
+
         public async Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId)
         {
             return await _context.Emprendimientos.Include(e => e.ExAlumno).Where(e => e.ExAlumnoId.Equals(userId)).ToListAsync();
@@ -47,92 +54,118 @@ namespace Infrastructure.Repositories
             return await _context.Servicios.Include(s => s.Emprendimiento).Where(s => s.EmprendimientoId.Equals(emprendimientoId)).ToListAsync();
         }
 
-        public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(
-            string? query,
-            Guid? estudioId
-        )
+        public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(SearchEmprendimientoQuery q)
         {
-            /*    query ??= string.Empty;
+            // Base query
+            IQueryable<Emprendimiento> query = _context.Emprendimientos
+                .AsNoTracking()
+                .Include(e => e.Estudio)
+                .Include(e => e.Direccion)
+                .Include(e => e.Servicios)
+                .Include(e => e.Portfolios)
+                .Include(e => e.ExAlumno)
+                    .ThenInclude(ex => ex.Estudios);
 
-                var flat = await (
-                    from e in _context.Emprendimientos
-                    join est in _context.Estudios
-                        on e.EstudioId equals est.Id
-                    join s in _context.Servicios
-                        on e.Id equals s.EmprendimientoId into serviciosGroup
-                    from s in serviciosGroup.DefaultIfEmpty()
-                    join ex in _context.ExAlumnos
-                        on e.ExAlumnoId equals ex.Id
-                    where
-                        // búsqueda por texto: departamento, dirección o nombre del emprendimiento
-                        (string.IsNullOrEmpty(query)
-                            || EF.Functions.ILike(e.Departamento, $"%{query}%")
-                            || EF.Functions.ILike(e.Direccion, $"%{query}%")
-                            || EF.Functions.ILike(e.Nombre, $"%{query}%")
-                        )
-                        // filtro por tipo de emprendimiento (Estudio)
-                        && (!estudioId.HasValue || est.Id.Equals(estudioId))
-                    select new
+            // Filters (AND)
+            if (!string.IsNullOrWhiteSpace(q.Departamento))
+            {
+                var dep = q.Departamento.Trim();
+                query = query.Where(e =>
+                    EF.Functions.ILike(e.Direccion.Departamento, $"%{dep}%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(q.Calle))
+            {
+                var calle = q.Calle.Trim();
+                query = query.Where(e =>
+                    EF.Functions.ILike(e.Direccion.Calle, $"%{calle}%"));
+            }
+
+            if (q.ExAlumnoId.HasValue)
+            {
+                var exId = q.ExAlumnoId.Value;
+                query = query.Where(e => e.ExAlumnoId == exId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(q.NombreDelEmprendimiento))
+            {
+                var name = q.NombreDelEmprendimiento.Trim();
+                query = query.Where(e =>
+                    EF.Functions.ILike(e.Nombre, $"%{name}%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(q.NombreDelServicio))
+            {
+                var service = q.NombreDelServicio.Trim();
+                query = query.Where(e =>
+                    e.Servicios.Any(s => EF.Functions.ILike(s.Nombre, $"%{service}%")));
+            }
+
+            // Proyección a DTO (mejor que traer entidades completas)
+            List<EmprendimientoDTO> result = await query
+                .OrderBy(e => e.Nombre)
+                .Select(e => new EmprendimientoDTO
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre,
+                    Descripcion = e.Descripcion,
+                    Imagen = e.Imagen,
+
+                    Estudio = e.Estudio == null ? null : new EstudioDTO
                     {
-                        Emprendimiento = e,
-                        Servicio = s,
-                        ExAlumno = ex,
-                        Estudio = est
-                    }
-                ).ToListAsync();
+                        Id = e.Estudio.Id,
+                        Titulo = e.Estudio.Titulo
+                    },
 
-                var result = flat
-                    .GroupBy(x => x.Emprendimiento.Id)
-                    .Select(g =>
+                    Direccion = new DireccionDTO
                     {
-                        var first = g.First();
+                        Calle = e.Direccion.Calle,
+                        Esquina = e.Direccion.Esquina,
+                        NumeroPuerta = e.Direccion.NumeroPuerta,
+                        Barrio = e.Direccion.Barrio,
+                        Departamento = e.Direccion.Departamento
+                    },
 
-                        return new EmprendimientoDTO
+                    Servicios = e.Servicios
+                        .Select(s => new ServicioDTO
                         {
-                            Id = first.Emprendimiento.Id,
+                            Id = s.Id,
+                            Nombre = s.Nombre,
+                            Descripcion = s.Descripcion,
+                            IconName = s.IconName,
+                            Costo = s.Costo
+                        })
+                        .ToList(),
 
-                            Nombre = first.Emprendimiento.Nombre,
-                            Descripcion = first.Emprendimiento.Descripcion,
-                            Direccion = first.Emprendimiento.Direccion,
+                    Portfolios = e.Portfolios
+                        .Select(p => new PortfolioDTO
+                        {
+                            Titulo = p.Titulo,
+                            Descripcion = p.Descripcion,
+                            Fecha = p.Fecha,
+                            ImagenUrl = p.Imagen
+                        })
+                        .ToList(),
 
-                            Estudio = new EstudioDTO
+                    ExAlumno = e.ExAlumno == null ? null : new ExAlumnoDTO
+                    {
+                        Nombre = e.ExAlumno.Nombre,
+                        Apellido = e.ExAlumno.Apellido,
+                        AnioEgreso = e.ExAlumno.AnioEgreso,
+                        Estudios = e.ExAlumno.Estudios
+                            .Select(est => new EstudioDTO
                             {
-                                Id = first.Estudio.Id,
-                                Titulo = first.Estudio.Titulo
-                            },
+                                Id = est.Id,
+                                Titulo = est.Titulo
+                            })
+                            .ToList()
+                    }
+                })
+                .ToListAsync();
 
-                            servicios = g
-                                .Where(x => x.Servicio != null)
-                                .Select(x => new ServicioDTO
-                                {
-                                    Id = x.Servicio.Id,
-                                    Nombre = x.Servicio.Nombre,
-                                    Descripcion = x.Servicio.Descripcion
-                                })
-                                .ToList(),
-
-                            ExAlumno = new ExAlumnoDTO
-                            {
-                                AnioEgreso = first.ExAlumno.AnioEgreso,
-                                Nombre = first.ExAlumno.Nombre,
-                                Apellido = first.ExAlumno.Apellido,
-                                Estudios = first.ExAlumno.Estudios
-                                    .Select(est => new EstudioDTO
-                                    {
-                                        Id = est.Id,
-                                        Titulo = est.Titulo
-                                    })
-                                    .ToList()
-                            }
-                        };
-                    })
-                    .ToList();
-
-                return result;
-            */
-
-            return null;
+            return result;
         }
+
 
     }
 }

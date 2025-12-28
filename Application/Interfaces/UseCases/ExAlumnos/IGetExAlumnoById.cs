@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.ExAlumno;
-using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.UseCases.ExAlumnos
 {
-    public interface IGetAllExAlumnos
+    public interface IGetExAlumnoById
     {
-        Task<List<ExAlumnoDTO>> ExecuteAsync();
+        Task<ExAlumnoDetailDTO> ExecuteAsync(Guid exAlumnoId);
     }
 }

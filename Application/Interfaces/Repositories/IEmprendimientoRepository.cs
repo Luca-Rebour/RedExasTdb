@@ -14,7 +14,8 @@ namespace Application.Interfaces.Repositories
         void CreateEmprendimiento(Emprendimiento emprendimiento);
         Task<List<Emprendimiento>> GetAllEmprendimientosAsync();
         Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId);
-        Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(string? query, Guid? estudioId);
+        Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(SearchEmprendimientoQuery query);
         Task<List<Servicio>> GetServiciosDeEmprendimiento(Guid emprendimientoId);
+        Task<Emprendimiento> GetEmprendimientoById(Guid emprendimientoId);
     }
 }

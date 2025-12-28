@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.ExAlumnos
+namespace Application.DTOs.ExAlumno
 {
     public class CreateExAlumnoDTO
     {

@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Empresa;
-using Application.DTOs.ExAlumnos;
+using Application.DTOs.ExAlumno;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Interfaces.UseCases.Empresas;
@@ -21,12 +21,14 @@ namespace Application.UseCases.Empresas
         private readonly IMapper _mapper;
         private readonly IPasswordService _passwordService;
         private readonly IUsuarioRepository _usuarioRepository;
-        public CreateEmpresa(IEmpresaRepository empresaRepository, IMapper mapper, IPasswordService passwordService, IUsuarioRepository usuarioRepository)
+        private readonly IUnitOfWork _uow;
+        public CreateEmpresa(IEmpresaRepository empresaRepository, IMapper mapper, IPasswordService passwordService, IUsuarioRepository usuarioRepository, IUnitOfWork uow)
         {
             _empresaRepository = empresaRepository;
             _mapper = mapper;
             _passwordService = passwordService;
             _usuarioRepository = usuarioRepository;
+            _uow = uow;
         }
 
         public async Task<EmpresaDTO> ExecuteAsync(CreateEmpresaDTO createEmpresaDTO)
@@ -39,6 +41,7 @@ namespace Application.UseCases.Empresas
             createEmpresaDTO.Contrasena = _passwordService.HashPassword(createEmpresaDTO.Contrasena);
             Empresa empresa = _mapper.Map<Empresa>(createEmpresaDTO);
             await _empresaRepository.CreateEmpresaAsync(empresa);
+            await _uow.SaveChangesAsync();
             return _mapper.Map<EmpresaDTO>(empresa);
 
         }

@@ -9,9 +9,9 @@ namespace Application.DTOs.Portfolio
 {
     public class PortfolioDTO
     {
-        public string Titulo { get; private set; } = string.Empty;
-        public string Descripcion { get; private set; } = string.Empty;
-        public DateOnly Fecha { get; private set; }
-        public string? ImagenUrl { get; private set; }
+        public string Titulo { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public DateOnly Fecha { get; set; }
+        public string? ImagenUrl { get; set; }
     }
 }

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.DTOs.Servicio
 {
     public class CreateServicioDTO
     {
-        public Guid? EmprendimientoId { get; set; }
+        [JsonIgnore]
+        public Guid EmprendimientoId { get; set; }
         public string? Nombre { get; set; } = null;
         public string Descripcion { get; set; } = string.Empty;
         public decimal? Costo { get; set; }

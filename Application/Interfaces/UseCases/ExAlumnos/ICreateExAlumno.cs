@@ -1,4 +1,4 @@
-﻿using Application.DTOs.ExAlumnos;
+﻿using Application.DTOs.ExAlumno;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,6 @@ namespace Application.Interfaces.UseCases.ExAlumnos
 {
     public interface ICreateExAlumno
     {
-        Task<ExAlumno> ExecuteAsync(CreateExAlumnoDTO exAlumnoDTO);
+        Task<ExAlumnoDTO> ExecuteAsync(CreateExAlumnoDTO exAlumnoDTO);
     }
 }

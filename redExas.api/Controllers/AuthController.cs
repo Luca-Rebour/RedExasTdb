@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RedExas.api.Controllers
 {
     [ApiController]
-    [Route("api/usuarios")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
 
@@ -19,8 +19,8 @@ namespace RedExas.api.Controllers
             _signIn = signIn;
         }
 
-        [HttpPost("sign-in")]
-        public async Task<IActionResult> signIn([FromBody] SignInDTO signInDTO)
+        [HttpPost("login")]
+        public async Task<IActionResult> login([FromBody] SignInDTO signInDTO)
         {
             SignInResultDTO result = await _signIn.ExecuteAsync(signInDTO);
             if (!result.Success)
