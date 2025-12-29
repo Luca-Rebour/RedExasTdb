@@ -11,6 +11,7 @@ namespace Domain.Entities
         public Guid Id { get; private set; } = Guid.NewGuid();
         public string Titulo { get; private set; } = string.Empty;
         public string Texto { get; private set; } = string.Empty;
+        public DateTime Fecha { get; private set; } = DateTime.Now;
 
 
         public Guid ExAlumnoId { get; private set; }

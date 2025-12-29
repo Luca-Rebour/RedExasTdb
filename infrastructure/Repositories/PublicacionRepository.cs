@@ -38,5 +38,14 @@ namespace Infrastructure.Repositories
         {
             _context.Update(publicacion);
         }
+
+        public async Task<List<Publicacion>> GetPublicacionesAsync(int skip = 0, int take = 50)
+        {
+            return await _context.Publicaciones
+                        .OrderByDescending(p => p.Fecha)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToListAsync();
+        }
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251228200305_inicial")]
+    [Migration("20251229015528_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -330,6 +330,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("ExAlumnoId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Texto")
                         .IsRequired()

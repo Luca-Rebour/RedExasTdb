@@ -328,6 +328,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ExAlumnoId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Texto")
                         .IsRequired()
                         .HasMaxLength(1000)

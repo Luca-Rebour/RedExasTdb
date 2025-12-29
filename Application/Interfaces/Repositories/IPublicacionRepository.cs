@@ -13,5 +13,6 @@ namespace Application.Interfaces.Repositories
         void UpdatePublicacion(Publicacion publicacion);
         void DeletePublicacion(Publicacion publicacion);
         Task<Publicacion> GetPublicacionAsync(Guid publicacionId);
+        Task<List<Publicacion>> GetPublicacionesAsync(int skip, int take);
     }
 }

@@ -195,6 +195,7 @@ namespace redExas.api
             builder.Services.AddScoped<IEditarPublicacion, EditarPublicacion>();
             builder.Services.AddScoped<IEliminarPublicacion, EliminarPublicacion>();
             builder.Services.AddScoped<IGetPublicacionById, GetPublicacionById>();
+            builder.Services.AddScoped<IGetPublicaciones, GetPublicaciones>();
             
             // Inyeccion de dependencias UseCases de Respuesta
             builder.Services.AddScoped<ICreateRespuesta, CreateRespuesta>();

@@ -17,17 +17,20 @@ namespace RedExas.api.Controllers
         private readonly IEditarPublicacion _editarPublicacion;
         private readonly IEliminarPublicacion _eliminarPublicacion;
         private readonly IGetPublicacionById _getPublicacionById;
+        private readonly IGetPublicaciones _getPublicaciones;
 
         public PublicacionController (
-            ICreatePublicacion createPublicacion, 
-            IEditarPublicacion editarPublicacion, 
-            IEliminarPublicacion eliminarPublicacion, 
-            IGetPublicacionById getPublicacionById)
+            ICreatePublicacion createPublicacion,
+            IEditarPublicacion editarPublicacion,
+            IEliminarPublicacion eliminarPublicacion,
+            IGetPublicacionById getPublicacionById,
+            IGetPublicaciones getPublicaciones)
         {
             _createPublicacion = createPublicacion;
             _editarPublicacion = editarPublicacion;
             _eliminarPublicacion = eliminarPublicacion;
             _getPublicacionById = getPublicacionById;
+            _getPublicaciones = getPublicaciones;
         }
 
         [HttpPost]
@@ -58,6 +61,17 @@ namespace RedExas.api.Controllers
             PublicacionDTO publicacionDTO = await _getPublicacionById.ExecuteAsync(publicacionId);
 
             return Ok(publicacionDTO);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> getPublicaciones([FromQuery] int? skip, [FromQuery] int? take)
+        {
+            int finalSkip = skip??= 0;
+            int Finaltake = take??= 50;
+
+            List<PublicacionDTO> publicacionesDTO = await _getPublicaciones.ExecuteAsync(finalSkip, Finaltake);
+            return Ok(publicacionesDTO);
         }
 
         [HttpDelete("{publicacionId:guid}")]

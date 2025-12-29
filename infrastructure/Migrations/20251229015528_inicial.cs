@@ -257,6 +257,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Titulo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Texto = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ExAlumnoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
