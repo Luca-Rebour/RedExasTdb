@@ -10,5 +10,6 @@ namespace Application.DTOs.Estudio
     {
         public Guid Id { get; set; }
         public string Titulo { get; set; } = string.Empty;
+        public string Color { get; set; }
     }
 }

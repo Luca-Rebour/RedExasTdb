@@ -25,7 +25,7 @@ namespace Application.UseCases.ExAlumnos
         }
         public async Task<ExAlumnoDetailDTO> ExecuteAsync(Guid exAlumnoId)
         {
-            ExAlumnoDetailDTO exAlumnoDTO = _mapper.Map<ExAlumnoDetailDTO>(await _exAlumnoRepository.GetAllExAlumnoAsync(exAlumnoId));
+            ExAlumnoDetailDTO exAlumnoDTO = _mapper.Map<ExAlumnoDetailDTO>(await _exAlumnoRepository.GetExAlumnoById(exAlumnoId));
             if (exAlumnoDTO == null)
             {
                 throw new NotFoundException("Ex alumno", exAlumnoId);

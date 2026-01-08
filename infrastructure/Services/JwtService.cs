@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,14 +12,17 @@ namespace Infrastructure.Services
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-
-        public JwtService(IConfiguration configuration)
+        private readonly ILogger<JwtService> _logger;
+        public JwtService(IConfiguration configuration, ILogger<JwtService> logger)
         {
+            _logger = logger;
             _configuration = configuration;
         }
 
         public string GenerateToken(Guid userId, string email, string userRole)
         {
+
+            var sw = Stopwatch.StartNew();
             var secretKey = _configuration["JwtSettings:Secret"];
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
@@ -42,7 +47,8 @@ namespace Infrastructure.Services
                 expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
                 signingCredentials: credentials
             );
-
+            sw.Stop();
+            _logger.LogInformation("LOGIN JWT: {ms} ms", sw.ElapsedMilliseconds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

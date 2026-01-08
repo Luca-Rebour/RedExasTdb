@@ -30,6 +30,7 @@ namespace Application.UseCases.Publicaciones
             Publicacion p = _mapper.Map<Publicacion>(createPublicacionDTO);
             _publicacionRepository.CreatePublicacion(p);
             await _uow.SaveChangesAsync();
+             p = await _publicacionRepository.GetPublicacionAsync(p.Id);
             return _mapper.Map<PublicacionDTO>(p);
         }
     }

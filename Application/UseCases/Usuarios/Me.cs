@@ -6,51 +6,42 @@ using Application.DTOs.Usuario;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Interfaces.UseCases.Auth;
+using Application.Interfaces.UseCases.Usuario;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Usuarios
 {
-    public class SignIn : ISignIn
+    public class Me : IMe
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
-        private readonly IPasswordService _passwordService;
-        private readonly IJwtService _jwtService;
         private readonly ILogger<SignIn> _logger;
 
-        public SignIn(IUsuarioRepository usuarioRepository, IMapper mapper, IPasswordService passwordService, IJwtService jwtService, ILogger<SignIn> logger)
+        public Me(IUsuarioRepository usuarioRepository, IMapper mapper, ILogger<SignIn> logger)
         {
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
-            _passwordService = passwordService;
-            _jwtService = jwtService;
             _logger = logger;
         }
 
-        public async Task<SignInResultDTO> ExecuteAsync(SignInDTO signInDTO)
+        public async Task<UsuarioDTO> ExecuteAsync(Guid userId)
         {
-            Usuario user = await _usuarioRepository.GetUserByEmail(signInDTO.Email);
-
-            if (user == null || !_passwordService.VerifyPassword(user.Contrasena, signInDTO.Contrasena))
-            {
-                return SignInResultDTO.Fail("Email o contraseña inválidos");
-            }
+            Usuario user = await _usuarioRepository.GetUserById(userId);
 
             string rol = user switch
-                    {
-                        Empresa => "Empresa",
-                        ExAlumno => "ExAlumno",
-                        Administrador => "Administrador",
-                        _ => throw new InvalidOperationException("Tipo de usuario desconocido")
-                    };
+            {
+                Empresa => "Empresa",
+                ExAlumno => "ExAlumno",
+                Administrador => "Administrador",
+                _ => throw new InvalidOperationException("Tipo de usuario desconocido")
+            };
 
             object details = user switch
             {
@@ -60,8 +51,7 @@ namespace Application.UseCases.Usuarios
                 _ => throw new InvalidOperationException("Tipo de usuario desconocido")
             };
 
-            var token = _jwtService.GenerateToken(user.Id, user.Email, rol);
-            return SignInResultDTO.SuccessResult(token, details);
+            return new UsuarioDTO(rol, details);
         }
-    }
+    }  
 }

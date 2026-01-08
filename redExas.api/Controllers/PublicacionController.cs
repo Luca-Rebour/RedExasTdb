@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Emprendimiento;
 using Application.DTOs.Portfolio;
 using Application.DTOs.Publicacion;
+using Application.DTOs.Repuesta;
 using Application.Interfaces.UseCases.Publicaciones;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,19 +19,22 @@ namespace RedExas.api.Controllers
         private readonly IEliminarPublicacion _eliminarPublicacion;
         private readonly IGetPublicacionById _getPublicacionById;
         private readonly IGetPublicaciones _getPublicaciones;
+        private readonly IGetRespuestasDePublicacion _getRespuestasDePublicacion;
 
         public PublicacionController (
             ICreatePublicacion createPublicacion,
             IEditarPublicacion editarPublicacion,
             IEliminarPublicacion eliminarPublicacion,
             IGetPublicacionById getPublicacionById,
-            IGetPublicaciones getPublicaciones)
+            IGetPublicaciones getPublicaciones,
+            IGetRespuestasDePublicacion getRespuestasDePublicacion)
         {
             _createPublicacion = createPublicacion;
             _editarPublicacion = editarPublicacion;
             _eliminarPublicacion = eliminarPublicacion;
             _getPublicacionById = getPublicacionById;
             _getPublicaciones = getPublicaciones;
+            _getRespuestasDePublicacion = getRespuestasDePublicacion;
         }
 
         [HttpPost]
@@ -61,6 +65,15 @@ namespace RedExas.api.Controllers
             PublicacionDTO publicacionDTO = await _getPublicacionById.ExecuteAsync(publicacionId);
 
             return Ok(publicacionDTO);
+        }
+
+        [HttpGet("respuestas/{publicacionId:guid}")]
+        [Authorize]
+        public async Task<IActionResult> getRespuestasDePublicacion([FromRoute] Guid publicacionId)
+        {
+
+            IEnumerable<RespuestaDTO> respuestas= await _getRespuestasDePublicacion.ExecuteAsync(publicacionId);
+            return Ok(respuestas);
         }
 
         [HttpGet]

@@ -27,11 +27,16 @@ namespace Infrastructure.Repositories
 
         public async Task<List<ExAlumno>> GetAllExAlumnosAsync()
         {
-            return await _context.ExAlumnos.ToListAsync();
+            return await _context.ExAlumnos
+                .Include(e => e.Estudios)
+                .ToListAsync();
         }
-        public async Task<ExAlumno> GetAllExAlumnoAsync(Guid exAlumnoId)
+        public async Task<ExAlumno> GetExAlumnoById(Guid exAlumnoId)
         {
-            return await _context.ExAlumnos.FirstOrDefaultAsync(e => e.Id.Equals(exAlumnoId));
+            return await _context.ExAlumnos
+                .Include(e => e.Estudios)
+                .Include(e => e.Emprendimientos)
+                .FirstOrDefaultAsync(e => e.Id.Equals(exAlumnoId));
         }
     }
 }

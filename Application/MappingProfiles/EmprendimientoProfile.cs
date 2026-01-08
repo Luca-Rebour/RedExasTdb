@@ -18,6 +18,8 @@ namespace Application.MappingProfiles
                 .ForMember(e => e.Imagen, o => o.MapFrom(s => s.LogoUrl));
 
             CreateMap<Emprendimiento, EmprendimientoDTO>();
+            CreateMap<Emprendimiento, EmprendimientoSummaryDTO>();
+
         }
     }
 }

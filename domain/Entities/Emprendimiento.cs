@@ -16,7 +16,7 @@ namespace Domain.Entities
         // EL ESTUDIO VENDRIA A SER UNA CATEGORIA DEL EMPRENDIMIENTO, PUEDE SER INFORMATICA, MECANICA AUTOMOTRIZ, 
         // MECANICA INDUSTRIAL, ADMINISTRACION, DEPORTE, DISENO GRAFICO, CARPINTERIA
         public Guid EstudioId { get; private set; }
-        public Estudio? Estudio { get; private set; }  
+        public Estudio? Estudio { get; private set; }
         public Disponibilidad Disponibilidad { get; private set; }
 
         public Guid ExAlumnoId { get; private set; }

@@ -11,5 +11,6 @@ namespace Application.Interfaces.Repositories
     {
         Task<bool> ExisteEmailAsync(string email);
         Task<Usuario> GetUserByEmail(string email);
+        Task<Usuario> GetUserById(Guid id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.DTOs.ExAlumno;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace Application.DTOs.Repuesta
         public Guid Id { get; set; }
         public string Texto { get; set; }
         public Guid PublicacionId { get; set; }
+        public ExAlumnoDTO exAlumno { get; set; }
     }
 }

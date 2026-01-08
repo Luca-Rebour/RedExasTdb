@@ -9,6 +9,6 @@ namespace Application.Interfaces.UseCases.Servicios
 {
     public interface ICreateServicio
     {
-        Task<ServicioDTO> ExecuteAsync(CreateServicioDTO createServicioDTO, Guid emprendimientoId);
+        Task<ServicioDTO> ExecuteAsync(CreateServicioDTO createServicioDTO, Guid userId);
     }
 }

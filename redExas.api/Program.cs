@@ -1,34 +1,38 @@
 
+using Api.Middlewares;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.UseCases.Auth;
+using Application.Interfaces.UseCases.Emprendimientos;
+using Application.Interfaces.UseCases.Empresas;
+using Application.Interfaces.UseCases.Estudios;
+using Application.Interfaces.UseCases.ExAlumnos;
+using Application.Interfaces.UseCases.Portfolios;
+using Application.Interfaces.UseCases.Publicaciones;
+using Application.Interfaces.UseCases.Respuestas;
+using Application.Interfaces.UseCases.Servicios;
+using Application.Interfaces.UseCases.Usuario;
+using Application.MappingProfiles;
+using Application.UseCases.Emprendimientos;
+using Application.UseCases.Empresas;
+using Application.UseCases.Estudios;
+using Application.UseCases.ExAlumnos;
+using Application.UseCases.Portfolios;
+using Application.UseCases.Publicaciones;
+using Application.UseCases.Respuestas;
+using Application.UseCases.Servicios;
+using Application.UseCases.Usuarios;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure;
-using Infrastructure.Services;
-using Microsoft.EntityFrameworkCore;
-using Application.MappingProfiles;
-using Application.Interfaces.Repositories;
 using Infrastructure.Repositories;
-using Application.Interfaces.UseCases.ExAlumnos;
-using Application.UseCases.ExAlumnos;
-using Application.Interfaces.UseCases.Emprendimientos;
-using Application.UseCases.Emprendimientos;
-using Microsoft.OpenApi.Models;
-using Application.Interfaces.UseCases.Auth;
-using Application.UseCases.Usuarios;
-using Api.Middlewares;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
-using Application.UseCases.Empresas;
-using Application.Interfaces.UseCases.Empresas;
-using Application.Interfaces.UseCases.Servicios;
-using Application.UseCases.Servicios;
-using Application.Interfaces.UseCases.Portfolios;
-using Application.UseCases.Portfolios;
-using Application.Interfaces.UseCases.Publicaciones;
-using Application.UseCases.Publicaciones;
-using Application.Interfaces.UseCases.Respuestas;
-using Application.UseCases.Respuestas;
 
 namespace redExas.api
 {
@@ -98,7 +102,7 @@ namespace redExas.api
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(jwt["Secret"]!)
                     ),
-                    // Si usás claim "role" plano:
+                    // Si usï¿½s claim "role" plano:
                     RoleClaimType = "role" // o ClaimTypes.Role si agregaste ese
                 };
             });
@@ -132,16 +136,18 @@ namespace redExas.api
 
             var mapperConfig = new MapperConfiguration(cfg =>
             {
+                cfg.AddProfile<AdministradorProfile>();
                 cfg.AddProfile<EmprendimientoProfile>();
-                cfg.AddProfile <ExAlumnoProfile>();
-                cfg.AddProfile <EmpresaProfile>();
-                cfg.AddProfile <DisponibilidadProfile>();
-                cfg.AddProfile <EstudioProfile>();
-                cfg.AddProfile <ServicioProfile>();
-                cfg.AddProfile <PortfolioProfile>();
-                cfg.AddProfile <DireccionProfile>();
-                cfg.AddProfile <PublicacionProfile>();
-                cfg.AddProfile <RespuestaProfile>();
+                cfg.AddProfile<ExAlumnoProfile>();
+                cfg.AddProfile<EmpresaProfile>();
+                cfg.AddProfile<DisponibilidadProfile>();
+                cfg.AddProfile<EstudioProfile>();
+                cfg.AddProfile<ServicioProfile>();
+                cfg.AddProfile<PortfolioProfile>();
+                cfg.AddProfile<DireccionProfile>();
+                cfg.AddProfile<PublicacionProfile>();
+                cfg.AddProfile<RespuestaProfile>();
+                cfg.AddProfile<UsuarioProfile>();
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
@@ -158,6 +164,7 @@ namespace redExas.api
             builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
             builder.Services.AddScoped<IPublicacionRepository, PublicacionRepository>();
             builder.Services.AddScoped<IRespuestaRepository, RespuestaRepository>();
+            builder.Services.AddScoped<IEstudioRepository, EstudioRepository>();
 
             // Inyeccion de dependencias UseCases de ExAlumno
             builder.Services.AddScoped<ICreateExAlumno, CreateExAlumno>();
@@ -172,10 +179,12 @@ namespace redExas.api
             builder.Services.AddScoped<IGetServiciosDeEmprendimiento, GetServiciosDeEmprendimiento>();
             builder.Services.AddScoped<IGetEmprendimientoById, GetEmprendimientoById>();
 
-            
+            // Inyeccion de dependencias UseCases de Estudio
+            builder.Services.AddScoped<IGetAllEstudios, GetAllEstudios>();
 
             // Inyeccion de dependencias UseCases de Usuario
             builder.Services.AddScoped<ISignIn, SignIn>();
+            builder.Services.AddScoped<IMe, Me>();
 
             // Inyeccion de dependencias UseCases de Empresas
             builder.Services.AddScoped<ICreateEmpresa, CreateEmpresa>();
@@ -196,7 +205,8 @@ namespace redExas.api
             builder.Services.AddScoped<IEliminarPublicacion, EliminarPublicacion>();
             builder.Services.AddScoped<IGetPublicacionById, GetPublicacionById>();
             builder.Services.AddScoped<IGetPublicaciones, GetPublicaciones>();
-            
+            builder.Services.AddScoped<IGetRespuestasDePublicacion, GetRespuestasDePublicacion>();
+
             // Inyeccion de dependencias UseCases de Respuesta
             builder.Services.AddScoped<ICreateRespuesta, CreateRespuesta>();
             builder.Services.AddScoped<IDeleteRespuesta, DeleteRespuesta>();
@@ -205,7 +215,17 @@ namespace redExas.api
             // Inyeccion de dependencias JWT
             builder.Services.AddScoped<IJwtService, JwtService>();
 
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File("logs/app-.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
+
             var app = builder.Build();
+
+            Log.Information("=== APPLICATION STARTED ===");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -223,7 +243,7 @@ namespace redExas.api
 
             app.UseAuthorization();
 
-            
+
 
             app.MapControllers();
 

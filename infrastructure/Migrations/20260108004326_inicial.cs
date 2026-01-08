@@ -324,8 +324,7 @@ namespace Infrastructure.Migrations
                     Descripcion = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     Fecha = table.Column<DateOnly>(type: "date", nullable: false),
                     Imagen = table.Column<string>(type: "text", nullable: false),
-                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EmprendimientoId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    EmprendimientoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -336,11 +335,6 @@ namespace Infrastructure.Migrations
                         principalTable: "Emprendimientos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Portfolios_Emprendimientos_EmprendimientoId1",
-                        column: x => x.EmprendimientoId1,
-                        principalTable: "Emprendimientos",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -397,8 +391,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DisponibilidadId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Dia = table.Column<int>(type: "integer", nullable: false),
-                    DisponibilidadId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    Dia = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -409,11 +402,6 @@ namespace Infrastructure.Migrations
                         principalTable: "Disponibilidades",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DisponibilidadDias_Disponibilidades_DisponibilidadId1",
-                        column: x => x.DisponibilidadId1,
-                        principalTable: "Disponibilidades",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -430,11 +418,6 @@ namespace Infrastructure.Migrations
                 name: "IX_DisponibilidadDias_DisponibilidadId",
                 table: "DisponibilidadDias",
                 column: "DisponibilidadId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DisponibilidadDias_DisponibilidadId1",
-                table: "DisponibilidadDias",
-                column: "DisponibilidadId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Disponibilidades_EmprendimientoId",
@@ -487,11 +470,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Portfolios_EmprendimientoId",
                 table: "Portfolios",
                 column: "EmprendimientoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Portfolios_EmprendimientoId1",
-                table: "Portfolios",
-                column: "EmprendimientoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Publicaciones_ExAlumnoId",

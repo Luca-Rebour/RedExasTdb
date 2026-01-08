@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.DTOs.Repuesta;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,6 +33,16 @@ namespace Infrastructure.Repositories
                 .Include(p => p.Publicacion)                
                 .FirstOrDefaultAsync(r => r.Id.Equals(respuestaId));
             return respuesta;
+        }
+
+        public async Task<List<Respuesta>> GetRespuestasDePublicacion(Guid publicacionId)
+        {
+            List<Respuesta> respuestas = await _context.Respuestas
+                .AsNoTracking()
+                .Include(p => p.ExAlumno)
+                .Where(r => r.PublicacionId.Equals(publicacionId))
+                .ToListAsync();
+            return respuestas;
         }
     }
 }

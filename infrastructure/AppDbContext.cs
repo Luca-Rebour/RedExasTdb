@@ -177,25 +177,16 @@ namespace Infrastructure
                        .IsRequired()
                        .HasMaxLength(1000);
 
-                builder.HasOne(a => a.ExAlumno)
-                        .WithMany()
-                        .HasForeignKey(a => a.ExAlumnoId)
-                        .OnDelete(DeleteBehavior.Cascade);
-
                 builder.HasMany(e => e.Servicios)
                        .WithOne(s => s.Emprendimiento)
                        .HasForeignKey(s => s.EmprendimientoId)
                        .OnDelete(DeleteBehavior.Cascade);
 
-
-                builder.HasMany(a => a.Portfolios)
-                    .WithOne()
-                    .OnDelete(DeleteBehavior.Cascade);
-
                 builder.HasOne(a => a.Direccion)
                  .WithOne()
                  .HasForeignKey<Emprendimiento>(a => a.DireccionId)
                  .OnDelete(DeleteBehavior.Restrict);
+
 
                 builder.HasOne(e => e.ExAlumno)
                    .WithMany(x => x.Emprendimientos)
@@ -287,10 +278,9 @@ namespace Infrastructure
                        .HasMaxLength(1000);
 
                 builder.HasOne(a => a.Emprendimiento)
-                     .WithMany()
+                     .WithMany(e => e.Portfolios)
                      .HasForeignKey(a => a.EmprendimientoId)
                      .OnDelete(DeleteBehavior.Cascade);
-
             });
 
 
@@ -299,9 +289,20 @@ namespace Infrastructure
                 builder.HasKey(a => a.Id);
 
                 builder.HasOne(a => a.Disponibilidad)
-                     .WithMany()
+                     .WithMany(a => a.Dias)
                      .HasForeignKey(a => a.DisponibilidadId)
                      .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<Disponibilidad>(builder =>
+            {
+                builder.HasKey(a => a.Id);
+
+                builder.HasOne(d => d.Emprendimiento)
+                   .WithOne(e => e.Disponibilidad)
+                   .OnDelete(DeleteBehavior.Cascade);
+
 
             });
 

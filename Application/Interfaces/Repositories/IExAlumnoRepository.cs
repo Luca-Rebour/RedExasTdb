@@ -11,7 +11,7 @@ namespace Application.Interfaces.Repositories
     {
         Task<ExAlumno> CreateExAlumnoAsync(ExAlumno exAlumno);
         Task<List<ExAlumno>> GetAllExAlumnosAsync();
-        Task<ExAlumno> GetAllExAlumnoAsync(Guid exAlumnoId);
+        Task<ExAlumno> GetExAlumnoById(Guid exAlumnoId);
 
     }
 }

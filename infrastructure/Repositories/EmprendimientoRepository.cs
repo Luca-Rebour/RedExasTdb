@@ -31,27 +31,46 @@ namespace Infrastructure.Repositories
         public async Task<List<Emprendimiento>> GetAllEmprendimientosAsync()
         {
             return await _context.Emprendimientos
-                .Include(e => e.ExAlumno)
-                .Include(d => d.Direccion)
-                .Include(s => s.Servicios)
-                .Include(e => e.Estudio)
-                .Include(e => e.Disponibilidad)
-                    .ThenInclude(d => d.Dias).ToListAsync();
+                        .AsNoTracking()
+                        .Include(e => e.ExAlumno)
+                        .Include(d => d.Direccion)
+                        .Include(s => s.Servicios)
+                        .Include(e => e.Estudio)
+                        .Include(e => e.Disponibilidad)
+                            .ThenInclude(d => d.Dias).ToListAsync();
         }
 
         public async Task<Emprendimiento> GetEmprendimientoById(Guid emprendimientoId)
         {
-            return await _context.Emprendimientos.FirstOrDefaultAsync(e => e.Id.Equals(emprendimientoId));
+            return await _context.Emprendimientos
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(e => e.Id.Equals(emprendimientoId));
         }
 
         public async Task<List<Emprendimiento>> GetEmprendimientosDeExAlumnoAsync(Guid userId)
         {
-            return await _context.Emprendimientos.Include(e => e.ExAlumno).Where(e => e.ExAlumnoId.Equals(userId)).ToListAsync();
+            return await _context.Emprendimientos
+                        .AsNoTracking()
+                        .Include(e => e.Direccion)
+                        .Include(e => e.Disponibilidad)
+                            .ThenInclude(d => d.Dias)
+                        .Include(e => e.Portfolios)
+                        .Include(e => e.Estudio)
+                        .Include(e => e.Servicios)
+                        .Include(e => e.ExAlumno)
+                        .Where(e => e.ExAlumnoId
+                        .Equals(userId))
+                        .ToListAsync();
         }
 
         public async Task<List<Servicio>> GetServiciosDeEmprendimiento(Guid emprendimientoId)
         {
-            return await _context.Servicios.Include(s => s.Emprendimiento).Where(s => s.EmprendimientoId.Equals(emprendimientoId)).ToListAsync();
+            return await _context.Servicios
+                        .AsNoTracking()
+                        .Include(s => s.Emprendimiento)
+                        .Where(s => s.EmprendimientoId
+                        .Equals(emprendimientoId))
+                        .ToListAsync();
         }
 
         public async Task<List<EmprendimientoDTO>> SearchEmprendimientoAsync(SearchEmprendimientoQuery q)
@@ -62,6 +81,7 @@ namespace Infrastructure.Repositories
                 .Include(e => e.Estudio)
                 .Include(e => e.Direccion)
                 .Include(e => e.Servicios)
+                .Include(e => e.Disponibilidad)
                 .Include(e => e.Portfolios)
                 .Include(e => e.ExAlumno)
                     .ThenInclude(ex => ex.Estudios);
@@ -149,7 +169,9 @@ namespace Infrastructure.Repositories
 
                     ExAlumno = e.ExAlumno == null ? null : new ExAlumnoDTO
                     {
+                        Id = e.Id,
                         Nombre = e.ExAlumno.Nombre,
+                        Email = e.ExAlumno.Email,
                         Apellido = e.ExAlumno.Apellido,
                         AnioEgreso = e.ExAlumno.AnioEgreso,
                         Estudios = e.ExAlumno.Estudios

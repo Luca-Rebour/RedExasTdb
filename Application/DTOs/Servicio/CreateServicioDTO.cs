@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -18,7 +19,10 @@ namespace Application.DTOs.Servicio
 
         public void Validate()
         {
-
+            if (EmprendimientoId == null)
+            {
+                throw new ValidationException("El Id del emprendimiento es obligatorio.");
+            }
         }
     }
 }

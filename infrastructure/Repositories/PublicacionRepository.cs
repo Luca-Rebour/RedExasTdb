@@ -31,7 +31,10 @@ namespace Infrastructure.Repositories
         public async Task<Publicacion> GetPublicacionAsync(Guid publicacionId)
         {
             return await _context.Publicaciones
-                    .FindAsync(publicacionId);
+                    .AsNoTracking()
+                    .Include(p => p.ExAlumno)
+                        .ThenInclude(e => e.Estudios)
+                    .FirstOrDefaultAsync(p => p.Id.Equals(publicacionId));
         }
 
         public void UpdatePublicacion(Publicacion publicacion)
@@ -42,6 +45,9 @@ namespace Infrastructure.Repositories
         public async Task<List<Publicacion>> GetPublicacionesAsync(int skip = 0, int take = 50)
         {
             return await _context.Publicaciones
+                        .AsNoTracking()
+                        .Include(p => p.ExAlumno)
+                            .ThenInclude(e => e.Estudios)
                         .OrderByDescending(p => p.Fecha)
                         .Skip(skip)
                         .Take(take)

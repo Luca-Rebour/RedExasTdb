@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251229015528_inicial")]
+    [Migration("20260108004326_inicial")]
     partial class inicial
     {
         /// <inheritdoc />
@@ -139,14 +139,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("DisponibilidadId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DisponibilidadId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DisponibilidadId");
-
-                    b.HasIndex("DisponibilidadId1");
 
                     b.ToTable("DisponibilidadDias");
                 });
@@ -298,9 +293,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("EmprendimientoId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("EmprendimientoId1")
-                        .HasColumnType("uuid");
-
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
@@ -316,8 +308,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmprendimientoId");
-
-                    b.HasIndex("EmprendimientoId1");
 
                     b.ToTable("Portfolios");
                 });
@@ -546,14 +536,10 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.DisponibilidadDia", b =>
                 {
                     b.HasOne("Domain.Entities.Disponibilidad", "Disponibilidad")
-                        .WithMany()
+                        .WithMany("Dias")
                         .HasForeignKey("DisponibilidadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Disponibilidad", null)
-                        .WithMany("Dias")
-                        .HasForeignKey("DisponibilidadId1");
 
                     b.Navigation("Disponibilidad");
                 });
@@ -610,14 +596,10 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Portfolio", b =>
                 {
                     b.HasOne("Domain.Entities.Emprendimiento", "Emprendimiento")
-                        .WithMany()
+                        .WithMany("Portfolios")
                         .HasForeignKey("EmprendimientoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Emprendimiento", null)
-                        .WithMany("Portfolios")
-                        .HasForeignKey("EmprendimientoId1");
 
                     b.Navigation("Emprendimiento");
                 });

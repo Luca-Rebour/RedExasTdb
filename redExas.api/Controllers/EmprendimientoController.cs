@@ -107,7 +107,7 @@ namespace RedExas.api.Controllers
         [HttpGet]
         public async Task<IActionResult> searchEmprendimiento([FromQuery] SearchEmprendimientoQuery query)
         {
-            var e = await _searchEmprendimiento.ExecuteAsync(query);
+            List<EmprendimientoDTO> e = await _searchEmprendimiento.ExecuteAsync(query);
             return Ok(e);
         }
 
@@ -116,8 +116,8 @@ namespace RedExas.api.Controllers
         public async Task<IActionResult> createServicio([FromBody] CreateServicioDTO createServicioDTO, [FromRoute] Guid emprendimientoId)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-            ServicioDTO servicioDTO = await _createServicio.ExecuteAsync(createServicioDTO, emprendimientoId);
+            createServicioDTO.EmprendimientoId = emprendimientoId;
+            ServicioDTO servicioDTO = await _createServicio.ExecuteAsync(createServicioDTO, userId);
             return CreatedAtAction(nameof(getServicioById), new { ServicioId = servicioDTO.Id }, servicioDTO);
         }
 

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.Repuesta;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Application.Interfaces.Repositories
         void CreateRespuesta(Respuesta respuesta);
         Task<Respuesta> GetRespuestaAsync(Guid respuestaId);
         void DeleteRespuesta(Respuesta respuesta);
+        Task<List<Respuesta>> GetRespuestasDePublicacion(Guid publicacionId);
     }
 }
